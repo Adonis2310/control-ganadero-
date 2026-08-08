@@ -4,10 +4,13 @@ import { notFound } from "next/navigation";
 import { ArrowLeft, Pencil } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { SupplierFinancialSummary } from "@/features/finanzas/components/supplier-financial-summary";
+import { calcularSupplierFinancialStats } from "@/features/finanzas/utils/finanzas.utils";
 import { SupplierDetails, SupplierPurchaseHistory } from "@/features/proveedores/components/supplier-details";
 import { calcularProveedorStats } from "@/features/proveedores/utils/proveedor.utils";
 import { createClient } from "@/lib/supabase/server";
 import { comprasService } from "@/services/compras.service";
+import { gastosService } from "@/services/gastos.service";
 import { proveedoresService } from "@/services/proveedores.service";
 
 interface ProveedorDetailPageProps {
@@ -32,8 +35,12 @@ export default async function ProveedorDetailPage({ params }: ProveedorDetailPag
     notFound();
   }
 
-  const compras = await comprasService.listByProveedor(supabase, proveedor.id);
+  const [compras, gastos] = await Promise.all([
+    comprasService.listByProveedor(supabase, proveedor.id),
+    gastosService.listByProveedor(supabase, proveedor.id),
+  ]);
   const stats = calcularProveedorStats(compras);
+  const financialStats = calcularSupplierFinancialStats(compras, gastos);
 
   return (
     <div className="flex flex-col gap-6">
@@ -60,6 +67,8 @@ export default async function ProveedorDetailPage({ params }: ProveedorDetailPag
       </div>
 
       <SupplierDetails proveedor={proveedor} stats={stats} />
+
+      <SupplierFinancialSummary stats={financialStats} />
 
       <div className="flex flex-col gap-3">
         <h4 className="text-sm font-medium text-muted-foreground">Historial de compras</h4>

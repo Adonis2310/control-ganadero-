@@ -10,6 +10,7 @@ import {
   Truck,
   Users,
   BarChart3,
+  Wallet,
 } from "lucide-react";
 
 export interface NavItem {
@@ -25,6 +26,7 @@ export const NAV_ITEMS: NavItem[] = [
   { title: "Inventario", href: "/inventario", icon: Boxes },
   { title: "Compras", href: "/compras", icon: ShoppingCart },
   { title: "Ventas", href: "/ventas", icon: Store },
+  { title: "Finanzas", href: "/finanzas", icon: Wallet },
   { title: "Clientes", href: "/clientes", icon: Users },
   { title: "Proveedores", href: "/proveedores", icon: Truck },
   { title: "Calendario", href: "/calendario", icon: Calendar, comingSoon: true },

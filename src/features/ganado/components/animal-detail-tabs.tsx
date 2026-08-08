@@ -4,6 +4,8 @@ import { AnimalSaleInfo } from "@/features/ganado/components/animal-sale-info";
 import { HealthSection } from "@/features/ganado/components/health-section";
 import { PesoSection } from "@/features/ganado/components/peso-section";
 import { ReproduccionSection } from "@/features/ganado/components/reproduccion-section";
+import { AnimalFinancialSummary } from "@/features/finanzas/components/animal-financial-summary";
+import type { GastoConReferencias } from "@/features/finanzas/types";
 import type {
   Animal,
   CriaRef,
@@ -32,6 +34,7 @@ export function AnimalDetailTabs({
   eventosComoMacho,
   crias,
   ventaInfo,
+  gastos,
 }: {
   animal: Animal;
   fincaId: string;
@@ -46,6 +49,7 @@ export function AnimalDetailTabs({
   eventosComoMacho: EventoReproductivoRow[];
   crias: CriaRef[];
   ventaInfo: AnimalVentaInfo | null;
+  gastos: GastoConReferencias[];
 }) {
   return (
     <Tabs defaultValue="informacion">
@@ -58,6 +62,7 @@ export function AnimalDetailTabs({
 
       <TabsContent value="informacion" className="mt-4 flex flex-col gap-4">
         {ventaInfo && <AnimalSaleInfo venta={ventaInfo} />}
+        {gastos.length > 0 && <AnimalFinancialSummary gastos={gastos} />}
         <AnimalInfoPanel animal={animal} />
       </TabsContent>
       <TabsContent value="peso" className="mt-4">

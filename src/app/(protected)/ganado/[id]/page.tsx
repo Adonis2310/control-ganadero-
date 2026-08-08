@@ -12,6 +12,7 @@ import { desparasitacionesService } from "@/services/desparasitaciones.service";
 import { enfermedadesService } from "@/services/enfermedades.service";
 import { eventosReproductivosService } from "@/services/eventos-reproductivos.service";
 import { fincaService } from "@/services/finca.service";
+import { gastosService } from "@/services/gastos.service";
 import { gestacionesService } from "@/services/gestaciones.service";
 import { pesosService } from "@/services/pesos.service";
 import { razasService } from "@/services/razas.service";
@@ -58,6 +59,7 @@ export default async function AnimalDetailPage({ params }: AnimalDetailPageProps
     eventosComoMacho,
     crias,
     ventaInfo,
+    gastos,
   ] = await Promise.all([
     pesosService.listByAnimal(supabase, animal.id),
     vacunasService.listByAnimal(supabase, animal.id),
@@ -71,6 +73,7 @@ export default async function AnimalDetailPage({ params }: AnimalDetailPageProps
     eventosReproductivosService.listByMacho(supabase, animal.id),
     animalesService.listDescendientes(supabase, animal.id),
     ventasService.getVentaInfoPorAnimal(supabase, animal.id),
+    gastosService.listByAnimal(supabase, animal.id),
   ]);
 
   return (
@@ -101,6 +104,7 @@ export default async function AnimalDetailPage({ params }: AnimalDetailPageProps
         eventosComoMacho={eventosComoMacho}
         crias={crias}
         ventaInfo={ventaInfo}
+        gastos={gastos}
       />
     </div>
   );

@@ -9,13 +9,18 @@ import { SaludDashboardAlerts } from "@/features/ganado/components/salud-dashboa
 import { construirDatosGenerales } from "@/features/ganado/utils/reproduccion.utils";
 import { InventoryDashboardAlerts } from "@/features/inventario/components/inventory-dashboard-alerts";
 import { calcularInventoryStats, formatearMoneda } from "@/features/inventario/utils/inventario.utils";
+import { FinancialDashboardWidget } from "@/features/finanzas/components/financial-dashboard-widget";
+import { calcularRangoPeriodo } from "@/features/finanzas/utils/periodo.utils";
+import { calcularResumenFinanciero, construirUltimasOperaciones } from "@/features/finanzas/utils/finanzas.utils";
 import { SalesDashboardWidget } from "@/features/ventas/components/sales-dashboard-widget";
 import { calcularSalesStats } from "@/features/ventas/utils/venta.utils";
 import { FARM_NAME } from "@/lib/constants/farm";
 import { createClient } from "@/lib/supabase/server";
 import { animalesService } from "@/services/animales.service";
+import { comprasService } from "@/services/compras.service";
 import { eventosReproductivosService } from "@/services/eventos-reproductivos.service";
 import { fincaService } from "@/services/finca.service";
+import { gastosService } from "@/services/gastos.service";
 import { gestacionesService } from "@/services/gestaciones.service";
 import { productosInventarioService } from "@/services/productos-inventario.service";
 import { saludService } from "@/services/salud.service";
@@ -40,18 +45,25 @@ export default async function DashboardPage() {
   const animales = await animalesService.listAllConSexo(supabase, finca.id);
   const animalIds = animales.map((a) => a.id);
 
-  const [alertasSalud, gestaciones, eventosReproductivos, productosInventario, ventas, lineasVenta] = await Promise.all([
-    saludService.getDashboardAlerts(supabase, finca.id),
-    gestacionesService.listForFinca(supabase, animalIds),
-    eventosReproductivosService.listForFinca(supabase, animalIds),
-    productosInventarioService.list(supabase),
-    ventasService.list(supabase),
-    ventasService.listAllLineas(supabase),
-  ]);
+  const [alertasSalud, gestaciones, eventosReproductivos, productosInventario, ventas, lineasVenta, compras, gastos] =
+    await Promise.all([
+      saludService.getDashboardAlerts(supabase, finca.id),
+      gestacionesService.listForFinca(supabase, animalIds),
+      eventosReproductivosService.listForFinca(supabase, animalIds),
+      productosInventarioService.list(supabase),
+      ventasService.list(supabase),
+      ventasService.listAllLineas(supabase),
+      comprasService.list(supabase),
+      gastosService.list(supabase),
+    ]);
   const { stats: statsReproduccion } = construirDatosGenerales(animales, gestaciones, eventosReproductivos);
   const statsInventario = calcularInventoryStats(productosInventario);
   const statsVentas = calcularSalesStats(ventas, lineasVenta);
   const ultimasVentas = ventas.slice(0, 4);
+
+  const rangoMes = calcularRangoPeriodo("mes");
+  const resumenFinanciero = calcularResumenFinanciero(ventas, compras, gastos, rangoMes);
+  const ultimasOperaciones = construirUltimasOperaciones(ventas, compras, gastos, 5);
 
   const STATS: StatCardData[] = [
     {
@@ -116,6 +128,7 @@ export default async function DashboardPage() {
         <ReproduccionDashboardAlerts stats={statsReproduccion} />
         <InventoryDashboardAlerts stats={statsInventario} />
         <SalesDashboardWidget stats={statsVentas} ultimasVentas={ultimasVentas} />
+        <FinancialDashboardWidget summary={resumenFinanciero} ultimasOperaciones={ultimasOperaciones} />
       </div>
     </div>
   );

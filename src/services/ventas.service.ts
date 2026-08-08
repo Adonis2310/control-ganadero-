@@ -51,9 +51,11 @@ export const ventasService = {
     return (data ?? []) as unknown as VentaConCliente[];
   },
 
-  /** Todas las líneas de venta (tipo/venta_id únicamente), para calcular estadísticas comerciales. */
-  async listAllLineas(supabase: SupabaseDb): Promise<Pick<DetalleVentaRow, "id" | "venta_id" | "tipo">[]> {
-    const { data, error } = await supabase.from("detalle_ventas").select("id, venta_id, tipo");
+  /** Todas las líneas de venta (campos mínimos), para calcular estadísticas comerciales y financieras. */
+  async listAllLineas(
+    supabase: SupabaseDb,
+  ): Promise<Pick<DetalleVentaRow, "id" | "venta_id" | "tipo" | "subtotal">[]> {
+    const { data, error } = await supabase.from("detalle_ventas").select("id, venta_id, tipo, subtotal");
     if (error) throw error;
     return data ?? [];
   },

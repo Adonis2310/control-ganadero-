@@ -995,6 +995,94 @@ export interface Database {
           },
         ];
       };
+      categorias_gastos: {
+        Row: {
+          id: string;
+          nombre: string;
+          descripcion: string | null;
+          activo: boolean;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          nombre: string;
+          descripcion?: string | null;
+          activo?: boolean;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          nombre?: string;
+          descripcion?: string | null;
+          activo?: boolean;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
+      gastos: {
+        Row: {
+          id: string;
+          categoria_id: string;
+          descripcion: string;
+          monto: number;
+          fecha: string;
+          metodo_pago: string | null;
+          proveedor_id: string | null;
+          animal_id: string | null;
+          observaciones: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          categoria_id: string;
+          descripcion: string;
+          monto: number;
+          fecha: string;
+          metodo_pago?: string | null;
+          proveedor_id?: string | null;
+          animal_id?: string | null;
+          observaciones?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          categoria_id?: string;
+          descripcion?: string;
+          monto?: number;
+          fecha?: string;
+          metodo_pago?: string | null;
+          proveedor_id?: string | null;
+          animal_id?: string | null;
+          observaciones?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "gastos_categoria_id_fkey";
+            columns: ["categoria_id"];
+            isOneToOne: false;
+            referencedRelation: "categorias_gastos";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "gastos_proveedor_id_fkey";
+            columns: ["proveedor_id"];
+            isOneToOne: false;
+            referencedRelation: "proveedores";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "gastos_animal_id_fkey";
+            columns: ["animal_id"];
+            isOneToOne: false;
+            referencedRelation: "animales";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
     };
     Views: Record<string, never>;
     Functions: {
