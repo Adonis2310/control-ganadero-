@@ -1,22 +1,25 @@
+import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
 import { Navbar } from "@/components/layout/navbar";
 import { Sidebar } from "@/components/layout/sidebar";
-import { createClient } from "@/lib/supabase/server";
 
 export default async function ProtectedLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  // El middleware ya validó la sesión contra Supabase (getUser()) y dejó el
+  // email en este header — evita repetir esa llamada de red en cada
+  // navegación. Si falta, es que algo bypasseó el middleware; redirigimos
+  // por seguridad.
+  const email = (await headers()).get("x-user-email");
 
-  if (!user) {
+  if (!email) {
     redirect("/login");
   }
+
+  const user = { email };
 
   return (
     <div className="min-h-svh bg-muted/30">

@@ -49,5 +49,17 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 
-  return supabaseResponse;
+  // Propaga el usuario ya validado a los Server Components vía un header,
+  // para que layouts como (protected)/layout.tsx no tengan que volver a
+  // llamar a getUser() (evita una segunda ida y vuelta a Supabase Auth en
+  // cada navegación).
+  if (user?.email) {
+    request.headers.set("x-user-email", user.email);
+  }
+
+  const response = NextResponse.next({ request });
+  for (const cookie of supabaseResponse.cookies.getAll()) {
+    response.cookies.set(cookie);
+  }
+  return response;
 }

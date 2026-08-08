@@ -23,7 +23,7 @@ export function LoginPanel({ children }: LoginPanelProps) {
         </defs>
       </svg>
 
-      <div className="flex h-full w-full items-center justify-center bg-[#F7F5ED] [clip-path:url(#login-organic-clip)]">
+      <div className="flex h-full w-full items-center justify-center bg-[#F7F5ED] [clip-path:url(#login-organic-clip)] dark:bg-[#1c2016]">
         {children}
       </div>
     </div>
