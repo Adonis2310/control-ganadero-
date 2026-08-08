@@ -213,7 +213,7 @@ export function OffspringFormDialog({
                 <div className="space-y-2">
                   <Label>Sexo *</Label>
                   <Select
-                    value={values.sexo || undefined}
+                    value={values.sexo}
                     onValueChange={(value) =>
                       updateField("sexo", (value ?? "") as CriaFormValues["sexo"])
                     }
@@ -241,7 +241,7 @@ export function OffspringFormDialog({
                 <div className="space-y-2">
                   <Label>Raza *</Label>
                   <Select
-                    value={values.raza_id || undefined}
+                    value={values.raza_id}
                     onValueChange={(value) => updateField("raza_id", value ?? "")}
                     disabled={isSubmitting || razas.length === 0}
                   >

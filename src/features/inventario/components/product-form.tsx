@@ -139,7 +139,7 @@ export function ProductForm({ mode, categorias, producto }: ProductFormProps) {
           <div className="space-y-2">
             <Label>Unidad de medida *</Label>
             <Select
-              value={values.unidad_medida || undefined}
+              value={values.unidad_medida}
               onValueChange={(value) => updateField("unidad_medida", value ?? "")}
               disabled={isSubmitting}
             >

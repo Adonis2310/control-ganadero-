@@ -21,7 +21,7 @@ export function CategorySelect({
   id,
 }: CategorySelectProps) {
   return (
-    <Select value={value || undefined} onValueChange={(next) => onChange(next ?? "")} disabled={disabled}>
+    <Select value={value} onValueChange={(next) => onChange(next ?? "")} disabled={disabled}>
       <SelectTrigger id={id} className="w-full">
         <SelectValue placeholder={placeholder}>
           {(current: string | null) => {

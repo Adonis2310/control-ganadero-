@@ -180,7 +180,7 @@ export function MatingFormDialog({
             <div className="space-y-2">
               <Label htmlFor="monta-participante">{modoDesdeMacho ? "Hembra *" : "Macho *"}</Label>
               <Select
-                value={(modoDesdeMacho ? hembraId : values.macho_id) || undefined}
+                value={modoDesdeMacho ? hembraId : values.macho_id}
                 onValueChange={(next) => {
                   if (modoDesdeMacho) {
                     setHembraId(next ?? "");
@@ -236,7 +236,7 @@ export function MatingFormDialog({
             <div className="space-y-2">
               <Label htmlFor="monta-tipo">Tipo de monta *</Label>
               <Select
-                value={values.tipo_monta || undefined}
+                value={values.tipo_monta}
                 onValueChange={(next) =>
                   updateField("tipo_monta", (next ?? "") as MontaFormValues["tipo_monta"])
                 }

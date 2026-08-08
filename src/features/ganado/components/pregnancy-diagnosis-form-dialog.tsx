@@ -159,7 +159,7 @@ export function PregnancyDiagnosisFormDialog({
             <div className="space-y-2">
               <Label htmlFor="diagnostico-resultado">Resultado *</Label>
               <Select
-                value={values.resultado || undefined}
+                value={values.resultado}
                 onValueChange={(next) =>
                   updateField("resultado", (next ?? "") as DiagnosticoFormValues["resultado"])
                 }
