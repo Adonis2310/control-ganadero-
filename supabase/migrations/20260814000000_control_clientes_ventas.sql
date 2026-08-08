@@ -475,7 +475,7 @@ begin
     where venta_id = p_venta_id and tipo = 'producto'
   loop
     insert into movimientos_inventario (producto_id, tipo, cantidad, fecha, motivo, venta_id, observaciones)
-    values (v_linea.producto_id, 'entrada', v_linea.cantidad, current_date, 'Reversión de venta', 'Compensación automática al revertir la venta.');
+    values (v_linea.producto_id, 'entrada', v_linea.cantidad, current_date, 'Reversión de venta', p_venta_id, 'Compensación automática al revertir la venta.');
   end loop;
 
   update animales
