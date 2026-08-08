@@ -17,6 +17,7 @@ import { pesosService } from "@/services/pesos.service";
 import { razasService } from "@/services/razas.service";
 import { tratamientosService } from "@/services/tratamientos.service";
 import { vacunasService } from "@/services/vacunas.service";
+import { ventasService } from "@/services/ventas.service";
 
 interface AnimalDetailPageProps {
   params: Promise<{ id: string }>;
@@ -56,6 +57,7 @@ export default async function AnimalDetailPage({ params }: AnimalDetailPageProps
     gestaciones,
     eventosComoMacho,
     crias,
+    ventaInfo,
   ] = await Promise.all([
     pesosService.listByAnimal(supabase, animal.id),
     vacunasService.listByAnimal(supabase, animal.id),
@@ -68,6 +70,7 @@ export default async function AnimalDetailPage({ params }: AnimalDetailPageProps
     gestacionesService.listByAnimal(supabase, animal.id),
     eventosReproductivosService.listByMacho(supabase, animal.id),
     animalesService.listDescendientes(supabase, animal.id),
+    ventasService.getVentaInfoPorAnimal(supabase, animal.id),
   ]);
 
   return (
@@ -97,6 +100,7 @@ export default async function AnimalDetailPage({ params }: AnimalDetailPageProps
         gestaciones={gestaciones}
         eventosComoMacho={eventosComoMacho}
         crias={crias}
+        ventaInfo={ventaInfo}
       />
     </div>
   );

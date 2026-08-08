@@ -9,6 +9,7 @@ import { createClient } from "@/lib/supabase/server";
 import { comprasService } from "@/services/compras.service";
 import { movimientosInventarioService } from "@/services/movimientos-inventario.service";
 import { productosInventarioService } from "@/services/productos-inventario.service";
+import { ventasService } from "@/services/ventas.service";
 
 interface ProductoDetailPageProps {
   params: Promise<{ id: string }>;
@@ -32,9 +33,10 @@ export default async function ProductoDetailPage({ params }: ProductoDetailPageP
     notFound();
   }
 
-  const [movimientos, compras] = await Promise.all([
+  const [movimientos, compras, ventas] = await Promise.all([
     movimientosInventarioService.listByProducto(supabase, producto.id),
     comprasService.listByProducto(supabase, producto.id),
+    ventasService.listByProducto(supabase, producto.id),
   ]);
 
   return (
@@ -59,6 +61,7 @@ export default async function ProductoDetailPage({ params }: ProductoDetailPageP
         productoInicial={producto}
         movimientosIniciales={movimientos}
         comprasIniciales={compras}
+        ventasIniciales={ventas}
       />
     </div>
   );

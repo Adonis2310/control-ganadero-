@@ -1,5 +1,6 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AnimalInfoPanel } from "@/features/ganado/components/animal-info-panel";
+import { AnimalSaleInfo } from "@/features/ganado/components/animal-sale-info";
 import { HealthSection } from "@/features/ganado/components/health-section";
 import { PesoSection } from "@/features/ganado/components/peso-section";
 import { ReproduccionSection } from "@/features/ganado/components/reproduccion-section";
@@ -15,6 +16,7 @@ import type {
   TratamientoConEnfermedad,
   VacunaRow,
 } from "@/features/ganado/types";
+import type { AnimalVentaInfo } from "@/features/ventas/types";
 
 export function AnimalDetailTabs({
   animal,
@@ -29,6 +31,7 @@ export function AnimalDetailTabs({
   gestaciones,
   eventosComoMacho,
   crias,
+  ventaInfo,
 }: {
   animal: Animal;
   fincaId: string;
@@ -42,6 +45,7 @@ export function AnimalDetailTabs({
   gestaciones: GestacionRow[];
   eventosComoMacho: EventoReproductivoRow[];
   crias: CriaRef[];
+  ventaInfo: AnimalVentaInfo | null;
 }) {
   return (
     <Tabs defaultValue="informacion">
@@ -52,7 +56,8 @@ export function AnimalDetailTabs({
         <TabsTrigger value="reproduccion">Reproducción</TabsTrigger>
       </TabsList>
 
-      <TabsContent value="informacion" className="mt-4">
+      <TabsContent value="informacion" className="mt-4 flex flex-col gap-4">
+        {ventaInfo && <AnimalSaleInfo venta={ventaInfo} />}
         <AnimalInfoPanel animal={animal} />
       </TabsContent>
       <TabsContent value="peso" className="mt-4">

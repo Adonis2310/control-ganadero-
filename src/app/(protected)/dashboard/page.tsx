@@ -8,7 +8,9 @@ import { ReproduccionDashboardAlerts } from "@/features/ganado/components/reprod
 import { SaludDashboardAlerts } from "@/features/ganado/components/salud-dashboard-alerts";
 import { construirDatosGenerales } from "@/features/ganado/utils/reproduccion.utils";
 import { InventoryDashboardAlerts } from "@/features/inventario/components/inventory-dashboard-alerts";
-import { calcularInventoryStats } from "@/features/inventario/utils/inventario.utils";
+import { calcularInventoryStats, formatearMoneda } from "@/features/inventario/utils/inventario.utils";
+import { SalesDashboardWidget } from "@/features/ventas/components/sales-dashboard-widget";
+import { calcularSalesStats } from "@/features/ventas/utils/venta.utils";
 import { FARM_NAME } from "@/lib/constants/farm";
 import { createClient } from "@/lib/supabase/server";
 import { animalesService } from "@/services/animales.service";
@@ -17,6 +19,7 @@ import { fincaService } from "@/services/finca.service";
 import { gestacionesService } from "@/services/gestaciones.service";
 import { productosInventarioService } from "@/services/productos-inventario.service";
 import { saludService } from "@/services/salud.service";
+import { ventasService } from "@/services/ventas.service";
 
 export const metadata: Metadata = {
   title: "Dashboard | Control Ganadero",
@@ -37,14 +40,18 @@ export default async function DashboardPage() {
   const animales = await animalesService.listAllConSexo(supabase, finca.id);
   const animalIds = animales.map((a) => a.id);
 
-  const [alertasSalud, gestaciones, eventosReproductivos, productosInventario] = await Promise.all([
+  const [alertasSalud, gestaciones, eventosReproductivos, productosInventario, ventas, lineasVenta] = await Promise.all([
     saludService.getDashboardAlerts(supabase, finca.id),
     gestacionesService.listForFinca(supabase, animalIds),
     eventosReproductivosService.listForFinca(supabase, animalIds),
     productosInventarioService.list(supabase),
+    ventasService.list(supabase),
+    ventasService.listAllLineas(supabase),
   ]);
   const { stats: statsReproduccion } = construirDatosGenerales(animales, gestaciones, eventosReproductivos);
   const statsInventario = calcularInventoryStats(productosInventario);
+  const statsVentas = calcularSalesStats(ventas, lineasVenta);
+  const ultimasVentas = ventas.slice(0, 4);
 
   const STATS: StatCardData[] = [
     {
@@ -56,8 +63,8 @@ export default async function DashboardPage() {
     },
     {
       label: "Ingresos del mes",
-      value: "$0.00",
-      change: "+0% vs. mes anterior",
+      value: formatearMoneda(statsVentas.ingresosDelMes),
+      change: `${statsVentas.ventasDelMes} venta${statsVentas.ventasDelMes === 1 ? "" : "s"} este mes`,
       trend: "neutral",
       icon: DollarSign,
     },
@@ -108,6 +115,7 @@ export default async function DashboardPage() {
         <SaludDashboardAlerts alertas={alertasSalud} />
         <ReproduccionDashboardAlerts stats={statsReproduccion} />
         <InventoryDashboardAlerts stats={statsInventario} />
+        <SalesDashboardWidget stats={statsVentas} ultimasVentas={ultimasVentas} />
       </div>
     </div>
   );

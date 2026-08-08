@@ -627,6 +627,8 @@ export interface Database {
           observaciones: string | null;
           compra_id: string | null;
           detalle_compra_id: string | null;
+          venta_id: string | null;
+          detalle_venta_id: string | null;
           created_at: string;
         };
         Insert: {
@@ -640,6 +642,8 @@ export interface Database {
           observaciones?: string | null;
           compra_id?: string | null;
           detalle_compra_id?: string | null;
+          venta_id?: string | null;
+          detalle_venta_id?: string | null;
           created_at?: string;
         };
         Update: {
@@ -653,6 +657,8 @@ export interface Database {
           observaciones?: string | null;
           compra_id?: string | null;
           detalle_compra_id?: string | null;
+          venta_id?: string | null;
+          detalle_venta_id?: string | null;
           created_at?: string;
         };
         Relationships: [
@@ -675,6 +681,20 @@ export interface Database {
             columns: ["detalle_compra_id"];
             isOneToOne: true;
             referencedRelation: "detalle_compras";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "movimientos_inventario_venta_id_fkey";
+            columns: ["venta_id"];
+            isOneToOne: false;
+            referencedRelation: "ventas";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "movimientos_inventario_detalle_venta_id_fkey";
+            columns: ["detalle_venta_id"];
+            isOneToOne: true;
+            referencedRelation: "detalle_ventas";
             referencedColumns: ["id"];
           },
         ];
@@ -819,6 +839,162 @@ export interface Database {
           },
         ];
       };
+      clientes: {
+        Row: {
+          id: string;
+          nombre: string;
+          identificacion: string | null;
+          telefono: string | null;
+          correo: string | null;
+          direccion: string | null;
+          notas: string | null;
+          activo: boolean;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          nombre: string;
+          identificacion?: string | null;
+          telefono?: string | null;
+          correo?: string | null;
+          direccion?: string | null;
+          notas?: string | null;
+          activo?: boolean;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          nombre?: string;
+          identificacion?: string | null;
+          telefono?: string | null;
+          correo?: string | null;
+          direccion?: string | null;
+          notas?: string | null;
+          activo?: boolean;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      ventas: {
+        Row: {
+          id: string;
+          numero: number;
+          cliente_id: string;
+          fecha: string;
+          estado: "borrador" | "pendiente" | "completada" | "cancelada";
+          subtotal: number;
+          descuento: number;
+          impuestos: number;
+          total: number;
+          metodo_pago: string | null;
+          observaciones: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          numero?: number;
+          cliente_id: string;
+          fecha: string;
+          estado?: "borrador" | "pendiente" | "completada" | "cancelada";
+          subtotal?: number;
+          descuento?: number;
+          impuestos?: number;
+          total?: number;
+          metodo_pago?: string | null;
+          observaciones?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          numero?: number;
+          cliente_id?: string;
+          fecha?: string;
+          estado?: "borrador" | "pendiente" | "completada" | "cancelada";
+          subtotal?: number;
+          descuento?: number;
+          impuestos?: number;
+          total?: number;
+          metodo_pago?: string | null;
+          observaciones?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "ventas_cliente_id_fkey";
+            columns: ["cliente_id"];
+            isOneToOne: false;
+            referencedRelation: "clientes";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      detalle_ventas: {
+        Row: {
+          id: string;
+          venta_id: string;
+          tipo: "animal" | "producto" | "otro";
+          producto_id: string | null;
+          animal_id: string | null;
+          descripcion: string | null;
+          cantidad: number;
+          precio_unitario: number;
+          descuento: number;
+          subtotal: number;
+        };
+        Insert: {
+          id?: string;
+          venta_id: string;
+          tipo: "animal" | "producto" | "otro";
+          producto_id?: string | null;
+          animal_id?: string | null;
+          descripcion?: string | null;
+          cantidad: number;
+          precio_unitario: number;
+          descuento?: number;
+          subtotal?: number;
+        };
+        Update: {
+          id?: string;
+          venta_id?: string;
+          tipo?: "animal" | "producto" | "otro";
+          producto_id?: string | null;
+          animal_id?: string | null;
+          descripcion?: string | null;
+          cantidad?: number;
+          precio_unitario?: number;
+          descuento?: number;
+          subtotal?: number;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "detalle_ventas_venta_id_fkey";
+            columns: ["venta_id"];
+            isOneToOne: false;
+            referencedRelation: "ventas";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "detalle_ventas_producto_id_fkey";
+            columns: ["producto_id"];
+            isOneToOne: false;
+            referencedRelation: "productos_inventario";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "detalle_ventas_animal_id_fkey";
+            columns: ["animal_id"];
+            isOneToOne: false;
+            referencedRelation: "animales";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
     };
     Views: Record<string, never>;
     Functions: {
@@ -849,6 +1025,41 @@ export interface Database {
       };
       recibir_compra: {
         Args: { p_compra_id: string };
+        Returns: undefined;
+      };
+      crear_venta: {
+        Args: {
+          p_cliente_id: string;
+          p_fecha: string;
+          p_estado: string | null;
+          p_descuento: number | null;
+          p_impuestos: number | null;
+          p_metodo_pago: string | null;
+          p_observaciones: string | null;
+          p_lineas: Json;
+        };
+        Returns: string;
+      };
+      actualizar_venta: {
+        Args: {
+          p_venta_id: string;
+          p_cliente_id: string;
+          p_fecha: string;
+          p_estado: string | null;
+          p_descuento: number | null;
+          p_impuestos: number | null;
+          p_metodo_pago: string | null;
+          p_observaciones: string | null;
+          p_lineas: Json;
+        };
+        Returns: undefined;
+      };
+      completar_venta: {
+        Args: { p_venta_id: string };
+        Returns: undefined;
+      };
+      revertir_venta: {
+        Args: { p_venta_id: string };
         Returns: undefined;
       };
     };
