@@ -1,54 +1,47 @@
-import { Activity } from "lucide-react";
-
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AnimalInfoPanel } from "@/features/ganado/components/animal-info-panel";
 import { HealthSection } from "@/features/ganado/components/health-section";
 import { PesoSection } from "@/features/ganado/components/peso-section";
+import { ReproduccionSection } from "@/features/ganado/components/reproduccion-section";
 import type {
   Animal,
+  CriaRef,
   DesparasitacionRow,
   EnfermedadRow,
+  EventoReproductivoRow,
+  GestacionRow,
   PesoRow,
+  Raza,
   TratamientoConEnfermedad,
   VacunaRow,
 } from "@/features/ganado/types";
 
-function ProximamentePanel({
-  icon: Icon,
-  titulo,
-}: {
-  icon: typeof Activity;
-  titulo: string;
-}) {
-  return (
-    <div className="flex flex-col items-center justify-center gap-3 rounded-xl border border-dashed py-16 text-center">
-      <div className="flex size-12 items-center justify-center rounded-full bg-muted">
-        <Icon className="size-5 text-muted-foreground" />
-      </div>
-      <div className="space-y-1">
-        <p className="font-medium">{titulo}</p>
-        <p className="text-sm text-muted-foreground">
-          Este módulo estará disponible en una fase posterior.
-        </p>
-      </div>
-    </div>
-  );
-}
-
 export function AnimalDetailTabs({
   animal,
+  fincaId,
+  razas,
   pesos,
   vacunas,
   desparasitaciones,
   enfermedades,
   tratamientos,
+  eventosReproductivos,
+  gestaciones,
+  eventosComoMacho,
+  crias,
 }: {
   animal: Animal;
+  fincaId: string;
+  razas: Raza[];
   pesos: PesoRow[];
   vacunas: VacunaRow[];
   desparasitaciones: DesparasitacionRow[];
   enfermedades: EnfermedadRow[];
   tratamientos: TratamientoConEnfermedad[];
+  eventosReproductivos: EventoReproductivoRow[];
+  gestaciones: GestacionRow[];
+  eventosComoMacho: EventoReproductivoRow[];
+  crias: CriaRef[];
 }) {
   return (
     <Tabs defaultValue="informacion">
@@ -75,7 +68,16 @@ export function AnimalDetailTabs({
         />
       </TabsContent>
       <TabsContent value="reproduccion" className="mt-4">
-        <ProximamentePanel icon={Activity} titulo="Reproducción" />
+        <ReproduccionSection
+          animalId={animal.id}
+          sexo={animal.sexo}
+          fincaId={fincaId}
+          razas={razas}
+          eventosIniciales={eventosReproductivos}
+          gestacionesIniciales={gestaciones}
+          eventosComoMachoIniciales={eventosComoMacho}
+          criasIniciales={crias}
+        />
       </TabsContent>
     </Tabs>
   );

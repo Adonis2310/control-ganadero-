@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { HeartPulse, Plus, Scale } from "lucide-react";
+import { HeartHandshake, HeartPulse, Plus, Scale } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { AnimalExplorer } from "@/features/ganado/components/animal-explorer";
@@ -52,6 +52,14 @@ export default async function GanadoPage() {
           >
             <HeartPulse className="size-4" />
             Salud
+          </Button>
+          <Button
+            variant="outline"
+            nativeButton={false}
+            render={<Link href="/reproduccion" />}
+          >
+            <HeartHandshake className="size-4" />
+            Reproducción
           </Button>
           <Button nativeButton={false} render={<Link href="/ganado/nuevo" />}>
             <Plus className="size-4" />

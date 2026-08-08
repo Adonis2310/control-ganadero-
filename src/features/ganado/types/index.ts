@@ -192,3 +192,142 @@ export const DEFAULT_SALUD_FILTERS: SaludFilters = {
   desde: "",
   hasta: "",
 };
+
+// ----------------------------------------------------------------------------
+// Reproducción
+// ----------------------------------------------------------------------------
+
+export type EventoReproductivoRow = Database["public"]["Tables"]["eventos_reproductivos"]["Row"];
+export type GestacionRow = Database["public"]["Tables"]["gestaciones"]["Row"];
+
+export type TipoEventoReproductivo = EventoReproductivoRow["tipo"];
+export type EstadoGestacion = GestacionRow["estado"];
+export type MetodoConcepcion = NonNullable<GestacionRow["metodo_concepcion"]>;
+export type ResultadoDiagnostico = NonNullable<EventoReproductivoRow["resultado_diagnostico"]>;
+export type TipoMonta = NonNullable<EventoReproductivoRow["tipo_monta"]>;
+export type EstadoPartoEvento = NonNullable<EventoReproductivoRow["estado_parto"]>;
+
+/** Estado calculado (no almacenado) del ciclo reproductivo de una hembra. */
+export type EstadoReproductivoHembra =
+  | "disponible"
+  | "en_celo"
+  | "servida"
+  | "gestante"
+  | "proxima_a_parto"
+  | "recuperandose"
+  | "sin_informacion";
+
+/** Estado calculado (no almacenado) del ciclo reproductivo de un macho. */
+export type EstadoReproductivoMacho = "activo" | "disponible" | "sin_informacion";
+
+export const TIPO_EVENTO_REPRODUCTIVO_LABEL: Record<TipoEventoReproductivo, string> = {
+  celo: "Celo",
+  monta: "Monta",
+  inseminacion: "Inseminación",
+  diagnostico: "Diagnóstico de preñez",
+  parto: "Parto",
+  aborto: "Aborto",
+};
+
+export const ESTADO_GESTACION_OPTIONS: { value: EstadoGestacion; label: string }[] = [
+  { value: "en_seguimiento", label: "En seguimiento" },
+  { value: "confirmada", label: "Confirmada" },
+  { value: "finalizada", label: "Finalizada" },
+  { value: "abortada", label: "Abortada" },
+];
+
+/** Gestación con el macho (padre) resuelto, cuando se conoce. */
+export interface GestacionConMacho extends GestacionRow {
+  macho: AnimalRef | null;
+}
+
+/** Evento reproductivo con el macho involucrado resuelto, cuando se conoce. */
+export interface EventoReproductivoConMacho extends EventoReproductivoRow {
+  macho: AnimalRef | null;
+}
+
+/** Referencia a una cría (animal cuya madre o padre es el animal consultado). */
+export interface CriaRef extends AnimalRef {
+  sexo: SexoAnimal;
+  fecha_nacimiento: string | null;
+}
+
+export interface ReproductiveSummaryHembra {
+  estado: EstadoReproductivoHembra;
+  ultimoCelo: string | null;
+  ultimaMontaOInseminacion: string | null;
+  gestacionActual: GestacionConMacho | null;
+  numeroPartos: number;
+  numeroCrias: number;
+}
+
+export interface ReproductiveSummaryMacho {
+  estado: EstadoReproductivoMacho;
+  numeroMontas: number;
+  numeroCrias: number;
+  ultimaMonta: string | null;
+}
+
+/** Un evento normalizado para la línea de tiempo reproductiva de un animal. */
+export interface RegistroReproductivo {
+  id: string;
+  tipo: TipoEventoReproductivo;
+  fecha: string;
+  titulo: string;
+  detalle: string | null;
+  estadoTono: "neutral" | "positivo" | "atencion" | "negativo";
+}
+
+export interface ReproduccionFilters {
+  search: string;
+  animalId: string | "todos";
+  sexo: SexoAnimal | "todos";
+  estadoReproductivo: EstadoReproductivoHembra | EstadoReproductivoMacho | "todos";
+  estadoGestacion: EstadoGestacion | "todos";
+  desde: string;
+  hasta: string;
+}
+
+export const DEFAULT_REPRODUCCION_FILTERS: ReproduccionFilters = {
+  search: "",
+  animalId: "todos",
+  sexo: "todos",
+  estadoReproductivo: "todos",
+  estadoGestacion: "todos",
+  desde: "",
+  hasta: "",
+};
+
+export interface ReproduccionGeneralStats {
+  hembras: number;
+  hembrasGestantes: number;
+  hembrasEnCelo: number;
+  partosProximos: number;
+  partosRegistrados: number;
+  criasNacidas: number;
+}
+
+export interface ProximoParto {
+  animal: AnimalRef;
+  fechaEstimadaParto: string;
+  diasRestantes: number;
+}
+
+export interface EventoRecienteFinca {
+  animal: AnimalRef;
+  tipo: TipoEventoReproductivo;
+  titulo: string;
+  fecha: string;
+}
+
+export interface GestacionActivaFinca extends GestacionConMacho {
+  animal: AnimalRef;
+}
+
+/** Fila del listado reproductivo general (un animal con su estado calculado). */
+export interface AnimalReproductivo {
+  animal: AnimalRef & { sexo: SexoAnimal };
+  estado: EstadoReproductivoHembra | EstadoReproductivoMacho;
+  gestacionActual: GestacionConMacho | null;
+  ultimoEvento: EventoReproductivoRow | null;
+}

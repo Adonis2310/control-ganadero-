@@ -1,7 +1,7 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 
 import type { Database } from "@/types/database.types";
-import type { Animal, AnimalRef, SexoAnimal } from "@/features/ganado/types";
+import type { Animal, AnimalRef, CriaRef, SexoAnimal } from "@/features/ganado/types";
 
 type SupabaseDb = SupabaseClient<Database>;
 type AnimalInsert = Database["public"]["Tables"]["animales"]["Insert"];
@@ -80,6 +80,63 @@ export const animalesService = {
       .select("id, identificador, nombre")
       .eq("finca_id", fincaId)
       .order("identificador");
+
+    if (error) throw error;
+    return data ?? [];
+  },
+
+  /** Referencia mínima (id/identificador/nombre) de un animal por id, o null si no existe. */
+  async getRef(supabase: SupabaseDb, id: string): Promise<AnimalRef | null> {
+    const { data, error } = await supabase
+      .from("animales")
+      .select("id, identificador, nombre")
+      .eq("id", id)
+      .maybeSingle();
+
+    if (error) throw error;
+    return data;
+  },
+
+  /** Referencia mínima con sexo incluido, para pantallas de reproducción (listado general, filtros). */
+  async listAllConSexo(
+    supabase: SupabaseDb,
+    fincaId: string,
+  ): Promise<(AnimalRef & { sexo: SexoAnimal })[]> {
+    const { data, error } = await supabase
+      .from("animales")
+      .select("id, identificador, nombre, sexo")
+      .eq("finca_id", fincaId)
+      .order("identificador");
+
+    if (error) throw error;
+    return data ?? [];
+  },
+
+  /** Animales activos de un sexo específico, para selects reproductivos (macho de una monta/inseminación). */
+  async listForBreedingSelect(
+    supabase: SupabaseDb,
+    fincaId: string,
+    sexo: SexoAnimal,
+  ): Promise<AnimalRef[]> {
+    const { data, error } = await supabase
+      .from("animales")
+      .select("id, identificador, nombre")
+      .eq("finca_id", fincaId)
+      .eq("sexo", sexo)
+      .eq("estado", "activo")
+      .order("identificador");
+
+    if (error) throw error;
+    return data ?? [];
+  },
+
+  /** Crías de un animal (donde es madre o padre), para la pestaña Reproducción. */
+  async listDescendientes(supabase: SupabaseDb, animalId: string): Promise<CriaRef[]> {
+    const { data, error } = await supabase
+      .from("animales")
+      .select("id, identificador, nombre, sexo, fecha_nacimiento")
+      .or(`madre_id.eq.${animalId},padre_id.eq.${animalId}`)
+      .order("fecha_nacimiento", { ascending: false });
 
     if (error) throw error;
     return data ?? [];

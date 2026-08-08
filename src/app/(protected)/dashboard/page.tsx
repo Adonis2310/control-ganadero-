@@ -4,10 +4,15 @@ import { Beef, Boxes, CalendarClock, DollarSign } from "lucide-react";
 import { StatCard } from "@/features/dashboard/components/stat-card";
 import { ChartPlaceholder } from "@/features/dashboard/components/chart-placeholder";
 import type { StatCardData } from "@/features/dashboard/types";
+import { ReproduccionDashboardAlerts } from "@/features/ganado/components/reproduccion-dashboard-alerts";
 import { SaludDashboardAlerts } from "@/features/ganado/components/salud-dashboard-alerts";
+import { construirDatosGenerales } from "@/features/ganado/utils/reproduccion.utils";
 import { FARM_NAME } from "@/lib/constants/farm";
 import { createClient } from "@/lib/supabase/server";
+import { animalesService } from "@/services/animales.service";
+import { eventosReproductivosService } from "@/services/eventos-reproductivos.service";
 import { fincaService } from "@/services/finca.service";
+import { gestacionesService } from "@/services/gestaciones.service";
 import { saludService } from "@/services/salud.service";
 
 export const metadata: Metadata = {
@@ -57,7 +62,15 @@ export default async function DashboardPage() {
 
   const supabase = await createClient();
   const finca = await fincaService.getOrCreate(supabase);
-  const alertasSalud = await saludService.getDashboardAlerts(supabase, finca.id);
+  const animales = await animalesService.listAllConSexo(supabase, finca.id);
+  const animalIds = animales.map((a) => a.id);
+
+  const [alertasSalud, gestaciones, eventosReproductivos] = await Promise.all([
+    saludService.getDashboardAlerts(supabase, finca.id),
+    gestacionesService.listForFinca(supabase, animalIds),
+    eventosReproductivosService.listForFinca(supabase, animalIds),
+  ]);
+  const { stats: statsReproduccion } = construirDatosGenerales(animales, gestaciones, eventosReproductivos);
 
   return (
     <div className="flex flex-col gap-6">
@@ -79,12 +92,13 @@ export default async function DashboardPage() {
         ))}
       </div>
 
-      <div className="grid gap-4 xl:grid-cols-2">
+      <div className="grid gap-4 xl:grid-cols-3">
         <ChartPlaceholder
           title="Producción mensual"
           description="Evolución de la producción a lo largo del año"
         />
         <SaludDashboardAlerts alertas={alertasSalud} />
+        <ReproduccionDashboardAlerts stats={statsReproduccion} />
       </div>
     </div>
   );

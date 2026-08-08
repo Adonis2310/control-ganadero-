@@ -387,6 +387,160 @@ export interface Database {
           },
         ];
       };
+      eventos_reproductivos: {
+        Row: {
+          id: string;
+          animal_id: string;
+          tipo: "celo" | "monta" | "inseminacion" | "diagnostico" | "parto" | "aborto";
+          fecha: string;
+          macho_id: string | null;
+          tipo_monta: "natural" | "controlada" | null;
+          metodo_inseminacion: string | null;
+          identificacion_semen: string | null;
+          resultado_diagnostico: "positivo" | "negativo" | null;
+          metodo_diagnostico: string | null;
+          numero_crias: number | null;
+          estado_parto: "normal" | "complicaciones" | null;
+          motivo_aborto: string | null;
+          veterinario: string | null;
+          gestacion_id: string | null;
+          observaciones: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          animal_id: string;
+          tipo: "celo" | "monta" | "inseminacion" | "diagnostico" | "parto" | "aborto";
+          fecha: string;
+          macho_id?: string | null;
+          tipo_monta?: "natural" | "controlada" | null;
+          metodo_inseminacion?: string | null;
+          identificacion_semen?: string | null;
+          resultado_diagnostico?: "positivo" | "negativo" | null;
+          metodo_diagnostico?: string | null;
+          numero_crias?: number | null;
+          estado_parto?: "normal" | "complicaciones" | null;
+          motivo_aborto?: string | null;
+          veterinario?: string | null;
+          gestacion_id?: string | null;
+          observaciones?: string | null;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          animal_id?: string;
+          tipo?: "celo" | "monta" | "inseminacion" | "diagnostico" | "parto" | "aborto";
+          fecha?: string;
+          macho_id?: string | null;
+          tipo_monta?: "natural" | "controlada" | null;
+          metodo_inseminacion?: string | null;
+          identificacion_semen?: string | null;
+          resultado_diagnostico?: "positivo" | "negativo" | null;
+          metodo_diagnostico?: string | null;
+          numero_crias?: number | null;
+          estado_parto?: "normal" | "complicaciones" | null;
+          motivo_aborto?: string | null;
+          veterinario?: string | null;
+          gestacion_id?: string | null;
+          observaciones?: string | null;
+          created_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "eventos_reproductivos_animal_id_fkey";
+            columns: ["animal_id"];
+            isOneToOne: false;
+            referencedRelation: "animales";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "eventos_reproductivos_macho_id_fkey";
+            columns: ["macho_id"];
+            isOneToOne: false;
+            referencedRelation: "animales";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "eventos_reproductivos_gestacion_id_fkey";
+            columns: ["gestacion_id"];
+            isOneToOne: false;
+            referencedRelation: "gestaciones";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      gestaciones: {
+        Row: {
+          id: string;
+          animal_id: string;
+          fecha_inicio: string;
+          fecha_diagnostico: string | null;
+          fecha_estimada_parto: string | null;
+          fecha_parto: string | null;
+          estado: "en_seguimiento" | "confirmada" | "finalizada" | "abortada";
+          metodo_concepcion:
+            | "monta_natural"
+            | "monta_controlada"
+            | "inseminacion_artificial"
+            | "desconocido"
+            | null;
+          macho_id: string | null;
+          observaciones: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          animal_id: string;
+          fecha_inicio: string;
+          fecha_diagnostico?: string | null;
+          fecha_estimada_parto?: string | null;
+          fecha_parto?: string | null;
+          estado?: "en_seguimiento" | "confirmada" | "finalizada" | "abortada";
+          metodo_concepcion?:
+            | "monta_natural"
+            | "monta_controlada"
+            | "inseminacion_artificial"
+            | "desconocido"
+            | null;
+          macho_id?: string | null;
+          observaciones?: string | null;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          animal_id?: string;
+          fecha_inicio?: string;
+          fecha_diagnostico?: string | null;
+          fecha_estimada_parto?: string | null;
+          fecha_parto?: string | null;
+          estado?: "en_seguimiento" | "confirmada" | "finalizada" | "abortada";
+          metodo_concepcion?:
+            | "monta_natural"
+            | "monta_controlada"
+            | "inseminacion_artificial"
+            | "desconocido"
+            | null;
+          macho_id?: string | null;
+          observaciones?: string | null;
+          created_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "gestaciones_animal_id_fkey";
+            columns: ["animal_id"];
+            isOneToOne: false;
+            referencedRelation: "animales";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "gestaciones_macho_id_fkey";
+            columns: ["macho_id"];
+            isOneToOne: false;
+            referencedRelation: "animales";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
     };
     Views: Record<string, never>;
     Functions: Record<string, never>;

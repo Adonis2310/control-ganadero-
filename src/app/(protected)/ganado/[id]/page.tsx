@@ -10,7 +10,11 @@ import { createClient } from "@/lib/supabase/server";
 import { animalesService } from "@/services/animales.service";
 import { desparasitacionesService } from "@/services/desparasitaciones.service";
 import { enfermedadesService } from "@/services/enfermedades.service";
+import { eventosReproductivosService } from "@/services/eventos-reproductivos.service";
+import { fincaService } from "@/services/finca.service";
+import { gestacionesService } from "@/services/gestaciones.service";
 import { pesosService } from "@/services/pesos.service";
+import { razasService } from "@/services/razas.service";
 import { tratamientosService } from "@/services/tratamientos.service";
 import { vacunasService } from "@/services/vacunas.service";
 
@@ -40,12 +44,30 @@ export default async function AnimalDetailPage({ params }: AnimalDetailPageProps
     notFound();
   }
 
-  const [pesos, vacunas, desparasitaciones, enfermedades, tratamientos] = await Promise.all([
+  const [
+    pesos,
+    vacunas,
+    desparasitaciones,
+    enfermedades,
+    tratamientos,
+    finca,
+    razas,
+    eventosReproductivos,
+    gestaciones,
+    eventosComoMacho,
+    crias,
+  ] = await Promise.all([
     pesosService.listByAnimal(supabase, animal.id),
     vacunasService.listByAnimal(supabase, animal.id),
     desparasitacionesService.listByAnimal(supabase, animal.id),
     enfermedadesService.listByAnimal(supabase, animal.id),
     tratamientosService.listByAnimal(supabase, animal.id),
+    fincaService.getOrCreate(supabase),
+    razasService.list(supabase),
+    eventosReproductivosService.listByAnimal(supabase, animal.id),
+    gestacionesService.listByAnimal(supabase, animal.id),
+    eventosReproductivosService.listByMacho(supabase, animal.id),
+    animalesService.listDescendientes(supabase, animal.id),
   ]);
 
   return (
@@ -64,11 +86,17 @@ export default async function AnimalDetailPage({ params }: AnimalDetailPageProps
       <AnimalDetailHeader animal={animal} />
       <AnimalDetailTabs
         animal={animal}
+        fincaId={finca.id}
+        razas={razas}
         pesos={pesos}
         vacunas={vacunas}
         desparasitaciones={desparasitaciones}
         enfermedades={enfermedades}
         tratamientos={tratamientos}
+        eventosReproductivos={eventosReproductivos}
+        gestaciones={gestaciones}
+        eventosComoMacho={eventosComoMacho}
+        crias={crias}
       />
     </div>
   );
