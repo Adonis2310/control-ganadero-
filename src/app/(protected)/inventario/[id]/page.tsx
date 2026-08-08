@@ -6,6 +6,7 @@ import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ProductDetailSection } from "@/features/inventario/components/product-detail-section";
 import { createClient } from "@/lib/supabase/server";
+import { comprasService } from "@/services/compras.service";
 import { movimientosInventarioService } from "@/services/movimientos-inventario.service";
 import { productosInventarioService } from "@/services/productos-inventario.service";
 
@@ -31,7 +32,10 @@ export default async function ProductoDetailPage({ params }: ProductoDetailPageP
     notFound();
   }
 
-  const movimientos = await movimientosInventarioService.listByProducto(supabase, producto.id);
+  const [movimientos, compras] = await Promise.all([
+    movimientosInventarioService.listByProducto(supabase, producto.id),
+    comprasService.listByProducto(supabase, producto.id),
+  ]);
 
   return (
     <div className="flex flex-col gap-6">
@@ -51,7 +55,11 @@ export default async function ProductoDetailPage({ params }: ProductoDetailPageP
         <p className="text-sm text-muted-foreground">{producto.categoria?.nombre ?? "Sin categoría"}</p>
       </div>
 
-      <ProductDetailSection productoInicial={producto} movimientosIniciales={movimientos} />
+      <ProductDetailSection
+        productoInicial={producto}
+        movimientosIniciales={movimientos}
+        comprasIniciales={compras}
+      />
     </div>
   );
 }

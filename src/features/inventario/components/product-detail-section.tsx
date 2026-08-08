@@ -11,7 +11,9 @@ import { DeactivateProductDialog } from "@/features/inventario/components/deacti
 import { InventoryMovementFormDialog } from "@/features/inventario/components/inventory-movement-form-dialog";
 import { MovementTable } from "@/features/inventario/components/movement-table";
 import { ProductDetails } from "@/features/inventario/components/product-details";
+import { ProductPurchaseHistory } from "@/features/inventario/components/product-purchase-history";
 import type { MovimientoInventarioRow, ProductoInventario, TipoMovimiento } from "@/features/inventario/types";
+import type { DetalleCompraConCompra } from "@/features/compras/types";
 import { createClient } from "@/lib/supabase/client";
 import { movimientosInventarioService } from "@/services/movimientos-inventario.service";
 import { productosInventarioService } from "@/services/productos-inventario.service";
@@ -19,9 +21,14 @@ import { productosInventarioService } from "@/services/productos-inventario.serv
 interface ProductDetailSectionProps {
   productoInicial: ProductoInventario;
   movimientosIniciales: MovimientoInventarioRow[];
+  comprasIniciales: DetalleCompraConCompra[];
 }
 
-export function ProductDetailSection({ productoInicial, movimientosIniciales }: ProductDetailSectionProps) {
+export function ProductDetailSection({
+  productoInicial,
+  movimientosIniciales,
+  comprasIniciales,
+}: ProductDetailSectionProps) {
   const router = useRouter();
   const [producto, setProducto] = useState(productoInicial);
   const [movimientos, setMovimientos] = useState(movimientosIniciales);
@@ -105,6 +112,8 @@ export function ProductDetailSection({ productoInicial, movimientosIniciales }: 
           <MovementTable movimientos={movimientosConProducto} unidadMedida={producto.unidad_medida} />
         )}
       </div>
+
+      <ProductPurchaseHistory compras={comprasIniciales} />
 
       {movimientoAbierto && (
         <InventoryMovementFormDialog

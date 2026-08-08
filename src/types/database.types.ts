@@ -625,6 +625,8 @@ export interface Database {
           fecha: string;
           motivo: string;
           observaciones: string | null;
+          compra_id: string | null;
+          detalle_compra_id: string | null;
           created_at: string;
         };
         Insert: {
@@ -636,6 +638,8 @@ export interface Database {
           fecha: string;
           motivo: string;
           observaciones?: string | null;
+          compra_id?: string | null;
+          detalle_compra_id?: string | null;
           created_at?: string;
         };
         Update: {
@@ -647,6 +651,8 @@ export interface Database {
           fecha?: string;
           motivo?: string;
           observaciones?: string | null;
+          compra_id?: string | null;
+          detalle_compra_id?: string | null;
           created_at?: string;
         };
         Relationships: [
@@ -657,11 +663,195 @@ export interface Database {
             referencedRelation: "productos_inventario";
             referencedColumns: ["id"];
           },
+          {
+            foreignKeyName: "movimientos_inventario_compra_id_fkey";
+            columns: ["compra_id"];
+            isOneToOne: false;
+            referencedRelation: "compras";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "movimientos_inventario_detalle_compra_id_fkey";
+            columns: ["detalle_compra_id"];
+            isOneToOne: true;
+            referencedRelation: "detalle_compras";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      proveedores: {
+        Row: {
+          id: string;
+          nombre: string;
+          empresa: string | null;
+          telefono: string | null;
+          correo: string | null;
+          direccion: string | null;
+          tipo: string | null;
+          notas: string | null;
+          activo: boolean;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          nombre: string;
+          empresa?: string | null;
+          telefono?: string | null;
+          correo?: string | null;
+          direccion?: string | null;
+          tipo?: string | null;
+          notas?: string | null;
+          activo?: boolean;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          nombre?: string;
+          empresa?: string | null;
+          telefono?: string | null;
+          correo?: string | null;
+          direccion?: string | null;
+          tipo?: string | null;
+          notas?: string | null;
+          activo?: boolean;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      compras: {
+        Row: {
+          id: string;
+          numero: number;
+          proveedor_id: string;
+          fecha: string;
+          estado: "borrador" | "pendiente" | "recibida" | "cancelada";
+          subtotal: number;
+          descuento: number;
+          impuestos: number;
+          total: number;
+          observaciones: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          numero?: number;
+          proveedor_id: string;
+          fecha: string;
+          estado?: "borrador" | "pendiente" | "recibida" | "cancelada";
+          subtotal?: number;
+          descuento?: number;
+          impuestos?: number;
+          total?: number;
+          observaciones?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          numero?: number;
+          proveedor_id?: string;
+          fecha?: string;
+          estado?: "borrador" | "pendiente" | "recibida" | "cancelada";
+          subtotal?: number;
+          descuento?: number;
+          impuestos?: number;
+          total?: number;
+          observaciones?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "compras_proveedor_id_fkey";
+            columns: ["proveedor_id"];
+            isOneToOne: false;
+            referencedRelation: "proveedores";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      detalle_compras: {
+        Row: {
+          id: string;
+          compra_id: string;
+          producto_id: string;
+          cantidad: number;
+          costo_unitario: number;
+          descuento: number;
+          subtotal: number;
+        };
+        Insert: {
+          id?: string;
+          compra_id: string;
+          producto_id: string;
+          cantidad: number;
+          costo_unitario: number;
+          descuento?: number;
+          subtotal?: number;
+        };
+        Update: {
+          id?: string;
+          compra_id?: string;
+          producto_id?: string;
+          cantidad?: number;
+          costo_unitario?: number;
+          descuento?: number;
+          subtotal?: number;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "detalle_compras_compra_id_fkey";
+            columns: ["compra_id"];
+            isOneToOne: false;
+            referencedRelation: "compras";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "detalle_compras_producto_id_fkey";
+            columns: ["producto_id"];
+            isOneToOne: false;
+            referencedRelation: "productos_inventario";
+            referencedColumns: ["id"];
+          },
         ];
       };
     };
     Views: Record<string, never>;
-    Functions: Record<string, never>;
+    Functions: {
+      crear_compra: {
+        Args: {
+          p_proveedor_id: string;
+          p_fecha: string;
+          p_estado: string | null;
+          p_descuento: number | null;
+          p_impuestos: number | null;
+          p_observaciones: string | null;
+          p_lineas: Json;
+        };
+        Returns: string;
+      };
+      actualizar_compra: {
+        Args: {
+          p_compra_id: string;
+          p_proveedor_id: string;
+          p_fecha: string;
+          p_estado: string | null;
+          p_descuento: number | null;
+          p_impuestos: number | null;
+          p_observaciones: string | null;
+          p_lineas: Json;
+        };
+        Returns: undefined;
+      };
+      recibir_compra: {
+        Args: { p_compra_id: string };
+        Returns: undefined;
+      };
+    };
     Enums: Record<string, never>;
     CompositeTypes: Record<string, never>;
   };
