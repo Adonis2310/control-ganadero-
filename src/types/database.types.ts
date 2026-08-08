@@ -541,6 +541,124 @@ export interface Database {
           },
         ];
       };
+      categorias_inventario: {
+        Row: {
+          id: string;
+          nombre: string;
+          descripcion: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          nombre: string;
+          descripcion?: string | null;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          nombre?: string;
+          descripcion?: string | null;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
+      productos_inventario: {
+        Row: {
+          id: string;
+          categoria_id: string;
+          nombre: string;
+          descripcion: string | null;
+          unidad_medida: string;
+          stock_actual: number;
+          stock_minimo: number;
+          costo_unitario: number | null;
+          proveedor_id: string | null;
+          activo: boolean;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          categoria_id: string;
+          nombre: string;
+          descripcion?: string | null;
+          unidad_medida: string;
+          stock_actual?: number;
+          stock_minimo?: number;
+          costo_unitario?: number | null;
+          proveedor_id?: string | null;
+          activo?: boolean;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          categoria_id?: string;
+          nombre?: string;
+          descripcion?: string | null;
+          unidad_medida?: string;
+          stock_actual?: number;
+          stock_minimo?: number;
+          costo_unitario?: number | null;
+          proveedor_id?: string | null;
+          activo?: boolean;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "productos_inventario_categoria_id_fkey";
+            columns: ["categoria_id"];
+            isOneToOne: false;
+            referencedRelation: "categorias_inventario";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      movimientos_inventario: {
+        Row: {
+          id: string;
+          producto_id: string;
+          tipo: "entrada" | "salida" | "ajuste";
+          cantidad: number;
+          costo_unitario: number | null;
+          fecha: string;
+          motivo: string;
+          observaciones: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          producto_id: string;
+          tipo: "entrada" | "salida" | "ajuste";
+          cantidad: number;
+          costo_unitario?: number | null;
+          fecha: string;
+          motivo: string;
+          observaciones?: string | null;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          producto_id?: string;
+          tipo?: "entrada" | "salida" | "ajuste";
+          cantidad?: number;
+          costo_unitario?: number | null;
+          fecha?: string;
+          motivo?: string;
+          observaciones?: string | null;
+          created_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "movimientos_inventario_producto_id_fkey";
+            columns: ["producto_id"];
+            isOneToOne: false;
+            referencedRelation: "productos_inventario";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
     };
     Views: Record<string, never>;
     Functions: Record<string, never>;
