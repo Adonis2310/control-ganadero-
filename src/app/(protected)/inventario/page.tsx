@@ -29,7 +29,7 @@ export default async function InventarioPage() {
             Controla los productos e insumos disponibles en tu finca.
           </p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           <Button variant="outline" nativeButton={false} render={<Link href="/inventario/movimientos" />}>
             <ClipboardList className="size-4" />
             Movimientos

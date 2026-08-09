@@ -36,7 +36,7 @@ export default async function GanadoPage() {
             Registra y administra todos los animales de tu finca.
           </p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           <Button
             variant="outline"
             nativeButton={false}
