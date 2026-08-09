@@ -3,15 +3,15 @@ import { ForgotPasswordForm } from "@/features/auth/components/forgot-password-f
 
 export function ForgotPasswordContent() {
   return (
-    <div className="mx-auto w-[82%] max-w-[380px]">
-      <div className="flex size-16 items-center justify-center rounded-full bg-[#e8eadc] dark:bg-white/10">
-        <CattleIcon className="size-8 text-[#35421f] dark:text-emerald-300" />
+    <div className="w-full lg:mx-auto lg:w-[82%] lg:max-w-[380px]">
+      <div className="flex size-12 items-center justify-center rounded-full bg-[#e8eadc] lg:size-16 dark:bg-white/10">
+        <CattleIcon className="size-6 text-[#35421f] lg:size-8 dark:text-emerald-300" />
       </div>
 
-      <h2 className="mt-6 text-2xl font-bold tracking-tight text-[#29321c] sm:text-3xl dark:text-white">
+      <h2 className="mt-4 text-2xl font-bold tracking-tight text-[#29321c] lg:mt-6 lg:text-3xl dark:text-white">
         Recuperar contraseña
       </h2>
-      <p className="mt-2 text-sm text-[#73756d] dark:text-white/60">
+      <p className="mt-1.5 text-sm text-[#73756d] lg:mt-2 dark:text-white/60">
         Ingresa tu correo electrónico y te enviaremos un enlace para restablecer tu contraseña.
       </p>
 

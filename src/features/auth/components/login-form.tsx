@@ -48,7 +48,7 @@ export function LoginForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="mt-8 space-y-4">
+    <form onSubmit={handleSubmit} className="mt-5 space-y-4 lg:mt-8">
       <div className="space-y-2">
         <Label htmlFor="email" className="text-[#29321c] dark:text-white">
           Correo electrónico
