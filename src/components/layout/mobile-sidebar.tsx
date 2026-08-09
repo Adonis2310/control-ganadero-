@@ -26,8 +26,11 @@ export function MobileSidebar() {
       >
         <Menu className="size-5" />
       </SheetTrigger>
-      <SheetContent side="left" className="w-72 p-0">
-        <SheetHeader className="border-b p-0">
+      <SheetContent
+        side="left"
+        className="w-72 border-white/40 bg-sidebar p-0 backdrop-blur-xl dark:border-white/10"
+      >
+        <SheetHeader className="border-b border-white/40 p-0 dark:border-white/10">
           <SheetTitle className="sr-only">Menú de navegación</SheetTitle>
           <Logo />
         </SheetHeader>

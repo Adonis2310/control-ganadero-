@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { Navbar } from "@/components/layout/navbar";
 import { Sidebar } from "@/components/layout/sidebar";
 import { ConfiguracionProvider } from "@/features/configuracion/hooks/use-configuracion";
+import { HERO_IMAGE_URL } from "@/lib/constants/hero-image";
 import { createClient } from "@/lib/supabase/server";
 import { configuracionSistemaService } from "@/services/configuracion-sistema.service";
 import { fincaService } from "@/services/finca.service";
@@ -36,7 +37,12 @@ export default async function ProtectedLayout({
 
   return (
     <ConfiguracionProvider finca={finca} sistema={sistema}>
-      <div className="min-h-svh bg-muted/30">
+      <div className="min-h-svh">
+        <div
+          className="fixed inset-0 -z-10 bg-cover bg-center"
+          style={{ backgroundImage: `url(${HERO_IMAGE_URL})` }}
+        />
+        <div className="fixed inset-0 -z-10 bg-black/25 dark:bg-black/55" />
         <Sidebar />
         <div className="flex min-h-svh flex-col lg:pl-64 print:pl-0">
           <Navbar user={user} />

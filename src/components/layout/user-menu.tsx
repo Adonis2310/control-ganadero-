@@ -1,10 +1,19 @@
 "use client";
 
-import { LogOut, Settings, User as UserIcon } from "lucide-react";
+import { useState } from "react";
+import { LogOut, Settings } from "lucide-react";
 import type { User } from "@supabase/supabase-js";
 
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -27,49 +36,68 @@ function getInitials(email: string | null | undefined) {
 
 export function UserMenu({ user }: UserMenuProps) {
   const { signOut } = useAuth();
+  const [confirmarAbierto, setConfirmarAbierto] = useState(false);
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger
-        render={<Button variant="ghost" className="gap-2 px-2" />}
-      >
-        <Avatar className="size-7">
-          <AvatarFallback className="text-xs">
-            {getInitials(user?.email)}
-          </AvatarFallback>
-        </Avatar>
-        <span className="hidden max-w-40 truncate text-sm font-medium sm:inline">
-          {user?.email ?? "Administrador"}
-        </span>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-56">
-        <DropdownMenuGroup>
-          <DropdownMenuLabel className="flex flex-col gap-0.5">
-            <span className="text-sm font-medium text-foreground">
-              Administrador
-            </span>
-            <span className="truncate text-xs font-normal text-muted-foreground">
-              {user?.email ?? "Sin sesión"}
-            </span>
-          </DropdownMenuLabel>
-        </DropdownMenuGroup>
-        <DropdownMenuSeparator />
-        <DropdownMenuGroup>
-          <DropdownMenuItem render={<a href="/configuracion" />}>
-            <UserIcon />
-            Mi perfil
+    <>
+      <DropdownMenu>
+        <DropdownMenuTrigger
+          render={<Button variant="ghost" className="gap-2 px-2" />}
+        >
+          <Avatar className="size-7">
+            <AvatarFallback className="text-xs">
+              {getInitials(user?.email)}
+            </AvatarFallback>
+          </Avatar>
+          <span className="hidden max-w-40 truncate text-sm font-medium sm:inline">
+            {user?.email ?? "Administrador"}
+          </span>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end" className="w-56">
+          <DropdownMenuGroup>
+            <DropdownMenuLabel className="flex flex-col gap-0.5">
+              <span className="text-sm font-medium text-foreground">
+                Administrador
+              </span>
+              <span className="truncate text-xs font-normal text-muted-foreground">
+                {user?.email ?? "Sin sesión"}
+              </span>
+            </DropdownMenuLabel>
+          </DropdownMenuGroup>
+          <DropdownMenuSeparator />
+          <DropdownMenuGroup>
+            <DropdownMenuItem render={<a href="/configuracion" />}>
+              <Settings />
+              Configuración
+            </DropdownMenuItem>
+          </DropdownMenuGroup>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem variant="destructive" onClick={() => setConfirmarAbierto(true)}>
+            <LogOut />
+            Cerrar sesión
           </DropdownMenuItem>
-          <DropdownMenuItem render={<a href="/configuracion" />}>
-            <Settings />
-            Configuración
-          </DropdownMenuItem>
-        </DropdownMenuGroup>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem variant="destructive" onClick={signOut}>
-          <LogOut />
-          Cerrar sesión
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+        </DropdownMenuContent>
+      </DropdownMenu>
+
+      <Dialog open={confirmarAbierto} onOpenChange={setConfirmarAbierto}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>¿Cerrar sesión?</DialogTitle>
+            <DialogDescription>
+              Tendrás que iniciar sesión nuevamente para volver a acceder al sistema.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setConfirmarAbierto(false)}>
+              Cancelar
+            </Button>
+            <Button variant="destructive" onClick={signOut}>
+              <LogOut />
+              Cerrar sesión
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }

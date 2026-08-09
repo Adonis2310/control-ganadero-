@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Beef, Boxes, CalendarClock, DollarSign } from "lucide-react";
 
 import { StatCard } from "@/features/dashboard/components/stat-card";
-import { ChartPlaceholder } from "@/features/dashboard/components/chart-placeholder";
 import type { StatCardData } from "@/features/dashboard/types";
 import { AgendaDashboardWidget } from "@/features/calendario/components/agenda-dashboard-widget";
 import type { ActividadAnimalRef } from "@/features/calendario/types";
@@ -156,7 +155,7 @@ export default async function DashboardPage() {
             <p className="text-sm text-muted-foreground">Panel de control ganadero</p>
           </div>
         </div>
-        <p className="text-sm text-muted-foreground">{formattedDate}</p>
+        <p className="text-sm text-white dark:text-muted-foreground">{formattedDate}</p>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
@@ -166,10 +165,6 @@ export default async function DashboardPage() {
       </div>
 
       <div className="grid gap-4 xl:grid-cols-2">
-        <ChartPlaceholder
-          title="Producción mensual"
-          description="Evolución de la producción a lo largo del año"
-        />
         <AgendaDashboardWidget stats={statsAgenda} proxima={proximaActividad} />
         <SaludDashboardAlerts alertas={alertasSalud} />
         <ReproduccionDashboardAlerts stats={statsReproduccion} />
