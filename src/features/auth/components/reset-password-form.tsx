@@ -4,7 +4,6 @@ import { useState, type FormEvent } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { CheckCircle2, Eye, EyeOff, Loader2, Lock } from "lucide-react";
-import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -16,6 +15,9 @@ import {
   type ResetPasswordFormValues,
 } from "@/features/auth/validations/reset-password.schema";
 import { authService } from "@/services/auth.service";
+
+const GLASS_INPUT =
+  "h-[52px] rounded-2xl border border-white/30 bg-white/10 pr-11 pl-4 text-white placeholder:text-white/60 focus-visible:border-white/60 focus-visible:ring-white/25";
 
 export function ResetPasswordForm() {
   const router = useRouter();
@@ -51,7 +53,6 @@ export function ResetPasswordForm() {
         setIsSubmitting(false);
         return;
       }
-      toast.success("Contraseña actualizada correctamente.");
       setActualizada(true);
     } catch {
       setErrorGeneral("No pudimos conectar con el servidor. Intenta nuevamente.");
@@ -62,14 +63,14 @@ export function ResetPasswordForm() {
 
   if (actualizada) {
     return (
-      <div className="mt-8 flex flex-col items-center gap-4 text-center">
-        <div className="flex size-12 items-center justify-center rounded-full bg-[#e8eadc] dark:bg-white/10">
-          <CheckCircle2 className="size-6 text-[#35421f] dark:text-emerald-300" />
+      <div className="mt-7 flex flex-col items-center gap-4 text-center">
+        <div className="flex size-12 items-center justify-center rounded-full bg-white/15">
+          <CheckCircle2 className="size-6 text-[#9fdb87]" />
         </div>
-        <p className="text-sm text-[#29321c] dark:text-white">Contraseña actualizada correctamente.</p>
+        <p className="text-sm text-white/90">Contraseña actualizada correctamente.</p>
         <Button
           onClick={() => router.push("/login")}
-          className="h-[50px] w-full rounded-full bg-[#35421f] text-white transition-all duration-200 hover:bg-[#46572a] dark:bg-emerald-700 dark:hover:bg-emerald-600"
+          className="h-[52px] w-full rounded-2xl bg-gradient-to-r from-[#9fdb87] to-[#3f6b2f] text-base font-semibold text-white shadow-[0_6px_20px_rgba(63,107,47,0.4)] transition-all duration-200 hover:brightness-105 active:brightness-95"
         >
           Ir al inicio de sesión
         </Button>
@@ -78,13 +79,12 @@ export function ResetPasswordForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="mt-5 space-y-4 lg:mt-8">
-      <div className="space-y-2">
-        <Label htmlFor="password" className="text-[#29321c] dark:text-white">
+    <form onSubmit={handleSubmit} className="mt-7 space-y-4">
+      <div className="space-y-1.5">
+        <Label htmlFor="password" className="text-white/90">
           Nueva contraseña
         </Label>
         <div className="relative">
-          <Lock className="pointer-events-none absolute top-1/2 left-4 size-4 -translate-y-1/2 text-[#73756d] dark:text-white/50" />
           <Input
             id="password"
             type={showPassword ? "text" : "password"}
@@ -94,26 +94,25 @@ export function ResetPasswordForm() {
             onChange={(event) => updateField("password", event.target.value)}
             required
             aria-invalid={Boolean(errors.password)}
-            className="h-[50px] rounded-2xl border-transparent bg-[#E8EEF9] px-11 text-[#29321c] placeholder:text-[#5c5e54] focus-visible:ring-[#35421f]/30 dark:bg-white/5 dark:text-white dark:placeholder:text-white/55"
+            className={GLASS_INPUT}
           />
           <button
             type="button"
             onClick={() => setShowPassword((value) => !value)}
             aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
-            className="absolute top-1/2 right-4 -translate-y-1/2 text-[#73756d] transition-colors hover:text-[#29321c] dark:text-white/50 dark:hover:text-white"
+            className="absolute top-1/2 right-4 -translate-y-1/2 text-white/70 transition-colors hover:text-white"
           >
             {showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
           </button>
         </div>
-        {errors.password && <p className="text-xs text-red-600 dark:text-red-400">{errors.password}</p>}
+        {errors.password && <p className="text-xs text-red-200">{errors.password}</p>}
       </div>
 
-      <div className="space-y-2">
-        <Label htmlFor="confirmPassword" className="text-[#29321c] dark:text-white">
+      <div className="space-y-1.5">
+        <Label htmlFor="confirmPassword" className="text-white/90">
           Confirmar nueva contraseña
         </Label>
         <div className="relative">
-          <Lock className="pointer-events-none absolute top-1/2 left-4 size-4 -translate-y-1/2 text-[#73756d] dark:text-white/50" />
           <Input
             id="confirmPassword"
             type={showPassword ? "text" : "password"}
@@ -123,14 +122,15 @@ export function ResetPasswordForm() {
             onChange={(event) => updateField("confirmPassword", event.target.value)}
             required
             aria-invalid={Boolean(errors.confirmPassword)}
-            className="h-[50px] rounded-2xl border-transparent bg-[#E8EEF9] px-11 text-[#29321c] placeholder:text-[#5c5e54] focus-visible:ring-[#35421f]/30 dark:bg-white/5 dark:text-white dark:placeholder:text-white/55"
+            className={GLASS_INPUT}
           />
+          <Lock className="pointer-events-none absolute top-1/2 right-4 size-4 -translate-y-1/2 text-white/70" />
         </div>
-        {errors.confirmPassword && <p className="text-xs text-red-600 dark:text-red-400">{errors.confirmPassword}</p>}
+        {errors.confirmPassword && <p className="text-xs text-red-200">{errors.confirmPassword}</p>}
       </div>
 
       {errorGeneral && (
-        <p role="alert" className="text-sm text-red-600 dark:text-red-400">
+        <p role="alert" className="text-sm text-red-200">
           {errorGeneral}
         </p>
       )}
@@ -138,7 +138,7 @@ export function ResetPasswordForm() {
       <Button
         type="submit"
         disabled={isSubmitting}
-        className="h-[50px] w-full rounded-full bg-[#35421f] text-white transition-all duration-200 hover:bg-[#46572a] dark:bg-emerald-700 dark:hover:bg-emerald-600"
+        className="h-[52px] w-full rounded-2xl bg-gradient-to-r from-[#9fdb87] to-[#3f6b2f] text-base font-semibold text-white shadow-[0_6px_20px_rgba(63,107,47,0.4)] transition-all duration-200 hover:brightness-105 active:brightness-95"
       >
         {isSubmitting ? (
           <>
@@ -151,10 +151,7 @@ export function ResetPasswordForm() {
       </Button>
 
       <div className="flex justify-center">
-        <Link
-          href="/login"
-          className="text-xs font-medium text-[#565850] transition-colors hover:text-[#29321c] dark:text-white/75 dark:hover:text-white"
-        >
+        <Link href="/login" className="text-xs font-medium text-white/75 transition-colors hover:text-white">
           Volver al inicio de sesión
         </Link>
       </div>

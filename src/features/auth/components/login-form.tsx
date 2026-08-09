@@ -3,13 +3,17 @@
 import { useState, type FormEvent } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { ArrowRight, Eye, EyeOff, Loader2, Lock, Mail } from "lucide-react";
+import { Check, Eye, EyeOff, Loader2, User } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { getAuthErrorMessage } from "@/features/auth/utils/auth-error.utils";
 import { authService } from "@/services/auth.service";
+import { cn } from "@/lib/utils";
+
+const GLASS_INPUT =
+  "h-[52px] rounded-2xl border border-white/30 bg-white/10 pr-11 pl-4 text-white placeholder:text-white/60 focus-visible:border-white/60 focus-visible:ring-white/25";
 
 export function LoginForm() {
   const router = useRouter();
@@ -17,6 +21,7 @@ export function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [rememberMe, setRememberMe] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -48,13 +53,12 @@ export function LoginForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="mt-5 space-y-4 lg:mt-8">
-      <div className="space-y-2">
-        <Label htmlFor="email" className="text-[#29321c] dark:text-white">
+    <form onSubmit={handleSubmit} className="mt-7 space-y-4">
+      <div className="space-y-1.5">
+        <Label htmlFor="email" className="text-white/90">
           Correo electrónico
         </Label>
         <div className="relative">
-          <Mail className="pointer-events-none absolute top-1/2 left-4 size-4 -translate-y-1/2 text-[#73756d] dark:text-white/50" />
           <Input
             id="email"
             type="email"
@@ -63,17 +67,17 @@ export function LoginForm() {
             value={email}
             onChange={(event) => setEmail(event.target.value)}
             required
-            className="h-[50px] rounded-2xl border-transparent bg-[#E8EEF9] pl-11 text-[#29321c] placeholder:text-[#5c5e54] focus-visible:ring-[#35421f]/30 dark:bg-white/5 dark:text-white dark:placeholder:text-white/55"
+            className={GLASS_INPUT}
           />
+          <User className="pointer-events-none absolute top-1/2 right-4 size-4 -translate-y-1/2 text-white/70" />
         </div>
       </div>
 
-      <div className="space-y-2">
-        <Label htmlFor="password" className="text-[#29321c] dark:text-white">
+      <div className="space-y-1.5">
+        <Label htmlFor="password" className="text-white/90">
           Contraseña
         </Label>
         <div className="relative">
-          <Lock className="pointer-events-none absolute top-1/2 left-4 size-4 -translate-y-1/2 text-[#73756d] dark:text-white/50" />
           <Input
             id="password"
             type={showPassword ? "text" : "password"}
@@ -82,36 +86,45 @@ export function LoginForm() {
             value={password}
             onChange={(event) => setPassword(event.target.value)}
             required
-            className="h-[50px] rounded-2xl border-transparent bg-[#E8EEF9] px-11 text-[#29321c] placeholder:text-[#5c5e54] focus-visible:ring-[#35421f]/30 dark:bg-white/5 dark:text-white dark:placeholder:text-white/55"
+            className={GLASS_INPUT}
           />
           <button
             type="button"
             onClick={() => setShowPassword((value) => !value)}
-            aria-label={
-              showPassword ? "Ocultar contraseña" : "Mostrar contraseña"
-            }
-            className="absolute top-1/2 right-4 -translate-y-1/2 text-[#73756d] transition-colors hover:text-[#29321c] dark:text-white/50 dark:hover:text-white"
+            aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+            className="absolute top-1/2 right-4 -translate-y-1/2 text-white/70 transition-colors hover:text-white"
           >
-            {showPassword ? (
-              <EyeOff className="size-4" />
-            ) : (
-              <Eye className="size-4" />
-            )}
+            {showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
           </button>
         </div>
       </div>
 
-      <div className="flex justify-end">
-        <Link
-          href="/recuperar-password"
-          className="text-xs font-medium text-[#565850] transition-colors hover:text-[#29321c] dark:text-white/75 dark:hover:text-white"
+      <div className="flex items-center justify-between gap-3 pt-1">
+        <button
+          type="button"
+          onClick={() => setRememberMe((value) => !value)}
+          role="checkbox"
+          aria-checked={rememberMe}
+          className="flex items-center gap-2 text-sm text-white/90"
         >
+          <span
+            className={cn(
+              "flex size-[18px] shrink-0 items-center justify-center rounded-md border transition-colors",
+              rememberMe ? "border-[#8ed17a] bg-[#8ed17a]" : "border-white/50 bg-white/10",
+            )}
+          >
+            {rememberMe && <Check className="size-3 text-[#1a2416]" strokeWidth={3} />}
+          </span>
+          Recordarme
+        </button>
+
+        <Link href="/recuperar-password" className="text-xs font-medium text-white/75 transition-colors hover:text-white">
           ¿Olvidaste tu contraseña?
         </Link>
       </div>
 
       {error && (
-        <p role="alert" className="text-sm text-red-600 dark:text-red-400">
+        <p role="alert" className="text-sm text-red-200">
           {error}
         </p>
       )}
@@ -119,7 +132,7 @@ export function LoginForm() {
       <Button
         type="submit"
         disabled={isSubmitting}
-        className="h-[50px] w-full rounded-full bg-[#35421f] text-white transition-all duration-200 hover:bg-[#46572a] dark:bg-emerald-700 dark:hover:bg-emerald-600"
+        className="h-[52px] w-full rounded-2xl bg-gradient-to-r from-[#9fdb87] to-[#3f6b2f] text-base font-semibold text-white shadow-[0_6px_20px_rgba(63,107,47,0.4)] transition-all duration-200 hover:brightness-105 active:brightness-95"
       >
         {isSubmitting ? (
           <>
@@ -127,12 +140,13 @@ export function LoginForm() {
             Iniciando sesión...
           </>
         ) : (
-          <>
-            <ArrowRight className="size-4" />
-            Iniciar sesión
-          </>
+          "Iniciar sesión"
         )}
       </Button>
+
+      <p className="text-center text-sm text-white/70">
+        ¿No tienes cuenta? <span className="font-semibold text-white/90">Regístrate</span>
+      </p>
     </form>
   );
 }
