@@ -1,3 +1,4 @@
+import { formatWeight } from "@/features/configuracion/utils/format.utils";
 import type { EstadoAnimal, SexoAnimal } from "@/features/ganado/types";
 
 /** Calcula una edad legible ("2 años 3 meses", "8 meses", "5 días") a partir de una fecha ISO. */
@@ -29,9 +30,9 @@ export function calcularEdad(fechaNacimiento: string | null): string {
   return días <= 1 ? "Recién nacido" : `${días} días`;
 }
 
+/** Delega en `formatWeight` (sección 17 de la Fase 12): respeta la unidad de peso configurada (kg/lb). */
 export function formatearPeso(kg: number | null): string {
-  if (kg === null || kg === undefined) return "Sin registrar";
-  return `${kg.toLocaleString("es", { maximumFractionDigits: 1 })} kg`;
+  return formatWeight(kg ?? null);
 }
 
 export function formatearFecha(fecha: string | null): string {

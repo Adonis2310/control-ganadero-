@@ -1,3 +1,4 @@
+import { formatCurrency } from "@/features/configuracion/utils/format.utils";
 import type {
   EstadoStock,
   InventoryAlert,
@@ -28,8 +29,14 @@ export function calcularValorTotal(producto: Pick<ProductoInventarioRow, "stock_
   return producto.stock_actual * (producto.costo_unitario ?? 0);
 }
 
+/**
+ * Formateador monetario histórico de la app — se mantiene por compatibilidad
+ * con los ~40 componentes que ya lo importan, pero ahora delega en
+ * `formatCurrency` (sección 16 de la Fase 12), que respeta la moneda y los
+ * decimales configurados en /configuracion en vez de un "$" fijo.
+ */
 export function formatearMoneda(valor: number): string {
-  return `$${valor.toLocaleString("es", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+  return formatCurrency(valor);
 }
 
 export function formatearCantidad(valor: number): string {

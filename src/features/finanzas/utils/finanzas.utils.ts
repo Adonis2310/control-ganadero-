@@ -1,3 +1,4 @@
+import { formatCurrencyCompact } from "@/features/configuracion/utils/format.utils";
 import type { CategoriaGastoRow, ExpenseCategoryPoint, FinancialSummaryData, GastoConReferencias, GastoRow, IncomeExpenseMonthPoint, IncomeTypePoint, OperacionReciente, RangoFechas, TipoIngreso } from "@/features/finanzas/types";
 import { enumerarMeses, mesDeFecha } from "@/features/finanzas/utils/periodo.utils";
 import type { CompraConProveedor, CompraRow } from "@/features/compras/types";
@@ -9,12 +10,9 @@ function dentroDeRango(fecha: string, rango: RangoFechas): boolean {
   return fecha >= rango.desde && fecha <= rango.hasta;
 }
 
-/** Versión abreviada de un monto (ej. "$45k", "$1.2M"), para ejes de gráficos donde el monto completo no cabe. */
+/** Versión abreviada de un monto (ej. "₡45k", "$1.2M"), para ejes de gráficos donde el monto completo no cabe. Delega en `formatCurrencyCompact` (sección 16). */
 export function formatearMonedaCompacta(valor: number): string {
-  const abs = Math.abs(valor);
-  if (abs >= 1_000_000) return `$${(valor / 1_000_000).toFixed(1)}M`;
-  if (abs >= 1_000) return `$${(valor / 1_000).toFixed(0)}k`;
-  return `$${valor.toFixed(0)}`;
+  return formatCurrencyCompact(valor);
 }
 
 export function filtrarVentasCompletadas(ventas: VentaRow[], rango: RangoFechas): VentaRow[] {

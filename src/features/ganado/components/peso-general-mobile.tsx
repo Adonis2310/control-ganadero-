@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 import type { PesoConAnimal } from "@/features/ganado/types";
-import { formatearFecha } from "@/features/ganado/utils/animal.utils";
+import { formatearFecha, formatearPeso } from "@/features/ganado/utils/animal.utils";
 import { formatearPorcentaje, formatearVariacion } from "@/features/ganado/utils/peso.utils";
 
 type PesoFila = PesoConAnimal & { variacionKg: number | null; variacionPorcentaje: number | null };
@@ -24,7 +24,7 @@ export function PesoGeneralMobile({ pesos }: { pesos: PesoFila[] }) {
                 Arete {peso.animal?.identificador ?? "—"} · {formatearFecha(peso.fecha)}
               </p>
             </div>
-            <p className="text-lg font-semibold">{peso.peso} kg</p>
+            <p className="text-lg font-semibold">{formatearPeso(peso.peso)}</p>
           </div>
           {peso.variacionKg !== null && (
             <p

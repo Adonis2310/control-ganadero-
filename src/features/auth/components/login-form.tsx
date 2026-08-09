@@ -1,12 +1,14 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
+import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { ArrowRight, Eye, EyeOff, Loader2, Lock, Mail } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { getAuthErrorMessage } from "@/features/auth/utils/auth-error.utils";
 import { authService } from "@/services/auth.service";
 
 export function LoginForm() {
@@ -23,13 +25,19 @@ export function LoginForm() {
     setError(null);
     setIsSubmitting(true);
 
-    const { error: signInError } = await authService.signInWithPassword({
-      email,
-      password,
-    });
+    try {
+      const { error: signInError } = await authService.signInWithPassword({
+        email,
+        password,
+      });
 
-    if (signInError) {
-      setError("Credenciales inválidas. Verifica tu correo y contraseña.");
+      if (signInError) {
+        setError(getAuthErrorMessage(signInError));
+        setIsSubmitting(false);
+        return;
+      }
+    } catch {
+      setError("No pudimos conectar con el servidor. Intenta nuevamente.");
       setIsSubmitting(false);
       return;
     }
@@ -93,6 +101,15 @@ export function LoginForm() {
         </div>
       </div>
 
+      <div className="flex justify-end">
+        <Link
+          href="/recuperar-password"
+          className="text-xs font-medium text-[#73756d] transition-colors hover:text-[#29321c] dark:text-white/60 dark:hover:text-white"
+        >
+          ¿Olvidaste tu contraseña?
+        </Link>
+      </div>
+
       {error && (
         <p role="alert" className="text-sm text-red-600 dark:text-red-400">
           {error}
@@ -105,11 +122,16 @@ export function LoginForm() {
         className="h-[50px] w-full rounded-full bg-[#35421f] text-white transition-all duration-200 hover:bg-[#46572a] dark:bg-emerald-700 dark:hover:bg-emerald-600"
       >
         {isSubmitting ? (
-          <Loader2 className="size-4 animate-spin" />
+          <>
+            <Loader2 className="size-4 animate-spin" />
+            Iniciando sesión...
+          </>
         ) : (
-          <ArrowRight className="size-4" />
+          <>
+            <ArrowRight className="size-4" />
+            Iniciar sesión
+          </>
         )}
-        Iniciar sesión
       </Button>
     </form>
   );

@@ -12,6 +12,7 @@ import {
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import type { PesoRow } from "@/features/ganado/types";
+import { formatearPeso } from "@/features/ganado/utils/animal.utils";
 
 function formatFechaCorta(fecha: string): string {
   return new Date(`${fecha}T00:00:00`).toLocaleDateString("es", {
@@ -30,7 +31,7 @@ function ChartTooltip({ active, payload }: PesoChartTooltipProps) {
   const punto = payload[0].payload;
   return (
     <div className="rounded-lg border bg-popover px-3 py-2 text-xs shadow-md">
-      <p className="font-medium text-popover-foreground">{punto.peso} kg</p>
+      <p className="font-medium text-popover-foreground">{formatearPeso(punto.peso)}</p>
       <p className="text-muted-foreground">{formatFechaCorta(punto.fecha)}</p>
     </div>
   );
@@ -75,7 +76,7 @@ export function PesoChart({ pesos }: { pesos: PesoRow[] }) {
                 axisLine={false}
                 tickLine={false}
                 width={64}
-                tickFormatter={(value: number) => `${Math.round(value)} kg`}
+                tickFormatter={(value: number) => formatearPeso(value)}
               />
               <Tooltip content={<ChartTooltip />} />
               <Line

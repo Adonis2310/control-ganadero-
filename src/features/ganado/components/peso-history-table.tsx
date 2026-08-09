@@ -16,7 +16,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import type { PesoConVariacion } from "@/features/ganado/types";
-import { formatearFecha } from "@/features/ganado/utils/animal.utils";
+import { formatearFecha, formatearPeso } from "@/features/ganado/utils/animal.utils";
 import { formatearVariacion, formatearPorcentaje } from "@/features/ganado/utils/peso.utils";
 
 interface PesoHistoryProps {
@@ -59,7 +59,7 @@ export function PesoHistoryTable({ pesos, onEdit, onDelete }: PesoHistoryProps) 
           {ordenDesc.map((peso) => (
             <TableRow key={peso.id}>
               <TableCell>{formatearFecha(peso.fecha)}</TableCell>
-              <TableCell className="font-medium">{peso.peso} kg</TableCell>
+              <TableCell className="font-medium">{formatearPeso(peso.peso)}</TableCell>
               <TableCell>
                 <VariacionCell peso={peso} />
               </TableCell>

@@ -1,5 +1,6 @@
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import type { PesoGeneralStats } from "@/features/ganado/types";
+import { formatearPeso } from "@/features/ganado/utils/animal.utils";
 
 function StatCard({ label, value, hint }: { label: string; value: string; hint?: string }) {
   return (
@@ -19,13 +20,10 @@ export function PesoGeneralStatsCards({ stats }: { stats: PesoGeneralStats }) {
   return (
     <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
       <StatCard label="Total de pesajes" value={String(stats.totalPesajes)} />
-      <StatCard
-        label="Peso promedio del hato"
-        value={stats.pesoPromedioHato !== null ? `${stats.pesoPromedioHato} kg` : "—"}
-      />
+      <StatCard label="Peso promedio del hato" value={formatearPeso(stats.pesoPromedioHato)} />
       <StatCard
         label="Mayor peso"
-        value={stats.animalMayorPeso ? `${stats.animalMayorPeso.peso} kg` : "—"}
+        value={stats.animalMayorPeso ? formatearPeso(stats.animalMayorPeso.peso) : "—"}
         hint={
           stats.animalMayorPeso
             ? stats.animalMayorPeso.nombre ?? stats.animalMayorPeso.identificador
@@ -34,7 +32,7 @@ export function PesoGeneralStatsCards({ stats }: { stats: PesoGeneralStats }) {
       />
       <StatCard
         label="Menor peso"
-        value={stats.animalMenorPeso ? `${stats.animalMenorPeso.peso} kg` : "—"}
+        value={stats.animalMenorPeso ? formatearPeso(stats.animalMenorPeso.peso) : "—"}
         hint={
           stats.animalMenorPeso
             ? stats.animalMenorPeso.nombre ?? stats.animalMenorPeso.identificador

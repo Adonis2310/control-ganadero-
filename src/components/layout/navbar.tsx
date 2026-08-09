@@ -10,7 +10,7 @@ interface NavbarProps {
 
 export function Navbar({ user }: NavbarProps) {
   return (
-    <header className="sticky top-0 z-20 flex h-16 items-center justify-between gap-4 border-b bg-background/95 px-4 backdrop-blur supports-backdrop-filter:bg-background/60 lg:px-6">
+    <header className="sticky top-0 z-20 flex h-16 items-center justify-between gap-4 border-b bg-background/95 px-4 backdrop-blur supports-backdrop-filter:bg-background/60 lg:px-6 print:hidden">
       <div className="flex items-center gap-2">
         <MobileSidebar />
       </div>

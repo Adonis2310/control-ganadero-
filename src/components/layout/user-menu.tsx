@@ -1,6 +1,5 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { LogOut, Settings, User as UserIcon } from "lucide-react";
 import type { User } from "@supabase/supabase-js";
 
@@ -15,7 +14,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { authService } from "@/services/auth.service";
+import { useAuth } from "@/features/auth/hooks/use-auth";
 
 interface UserMenuProps {
   user: Pick<User, "email"> | null;
@@ -27,13 +26,7 @@ function getInitials(email: string | null | undefined) {
 }
 
 export function UserMenu({ user }: UserMenuProps) {
-  const router = useRouter();
-
-  async function handleSignOut() {
-    await authService.signOut();
-    router.push("/login");
-    router.refresh();
-  }
+  const { signOut } = useAuth();
 
   return (
     <DropdownMenu>
@@ -72,7 +65,7 @@ export function UserMenu({ user }: UserMenuProps) {
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuItem variant="destructive" onClick={handleSignOut}>
+        <DropdownMenuItem variant="destructive" onClick={signOut}>
           <LogOut />
           Cerrar sesión
         </DropdownMenuItem>

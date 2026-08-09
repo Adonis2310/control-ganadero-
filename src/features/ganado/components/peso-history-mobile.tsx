@@ -8,7 +8,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import type { PesoConVariacion } from "@/features/ganado/types";
-import { formatearFecha } from "@/features/ganado/utils/animal.utils";
+import { formatearFecha, formatearPeso } from "@/features/ganado/utils/animal.utils";
 import { formatearVariacion, formatearPorcentaje } from "@/features/ganado/utils/peso.utils";
 
 interface PesoHistoryMobileProps {
@@ -28,7 +28,7 @@ export function PesoHistoryMobile({ pesos, onEdit, onDelete }: PesoHistoryMobile
           <div key={peso.id} className="rounded-xl border bg-card p-4">
             <div className="flex items-start justify-between">
               <div>
-                <p className="text-lg font-semibold">{peso.peso} kg</p>
+                <p className="text-lg font-semibold">{formatearPeso(peso.peso)}</p>
                 <p className="text-xs text-muted-foreground">{formatearFecha(peso.fecha)}</p>
               </div>
               <DropdownMenu>

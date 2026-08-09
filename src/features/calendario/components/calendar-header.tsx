@@ -11,6 +11,7 @@ import {
   formatearEtiquetaMes,
   formatearEtiquetaSemana,
 } from "@/features/calendario/utils/actividad.utils";
+import type { PrimerDiaSemana } from "@/features/configuracion/types";
 
 interface CalendarHeaderProps {
   viewMode: CalendarViewMode;
@@ -19,15 +20,16 @@ interface CalendarHeaderProps {
   onPrevious: () => void;
   onNext: () => void;
   onToday: () => void;
+  primerDiaSemana: PrimerDiaSemana;
 }
 
-function etiquetaPara(viewMode: CalendarViewMode, refDate: string): string {
+function etiquetaPara(viewMode: CalendarViewMode, refDate: string, primerDiaSemana: PrimerDiaSemana): string {
   if (viewMode === "mes") return formatearEtiquetaMes(refDate);
-  if (viewMode === "semana") return formatearEtiquetaSemana(construirDiasSemana(refDate));
+  if (viewMode === "semana") return formatearEtiquetaSemana(construirDiasSemana(refDate, primerDiaSemana));
   return formatearEtiquetaDia(refDate);
 }
 
-export function CalendarHeader({ viewMode, onViewModeChange, refDate, onPrevious, onNext, onToday }: CalendarHeaderProps) {
+export function CalendarHeader({ viewMode, onViewModeChange, refDate, onPrevious, onNext, onToday, primerDiaSemana }: CalendarHeaderProps) {
   return (
     <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
       <div className="flex items-center gap-2">
@@ -40,7 +42,7 @@ export function CalendarHeader({ viewMode, onViewModeChange, refDate, onPrevious
         <Button variant="outline" size="icon" onClick={onNext} aria-label="Siguiente">
           <ChevronRight className="size-4" />
         </Button>
-        <h2 className="ml-1 text-sm font-semibold capitalize sm:text-base">{etiquetaPara(viewMode, refDate)}</h2>
+        <h2 className="ml-1 text-sm font-semibold capitalize sm:text-base">{etiquetaPara(viewMode, refDate, primerDiaSemana)}</h2>
       </div>
 
       <Tabs value={viewMode} onValueChange={(value) => value && onViewModeChange(value as CalendarViewMode)}>

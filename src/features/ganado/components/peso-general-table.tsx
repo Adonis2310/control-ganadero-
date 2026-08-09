@@ -9,7 +9,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import type { PesoConAnimal } from "@/features/ganado/types";
-import { formatearFecha } from "@/features/ganado/utils/animal.utils";
+import { formatearFecha, formatearPeso } from "@/features/ganado/utils/animal.utils";
 import { formatearPorcentaje, formatearVariacion } from "@/features/ganado/utils/peso.utils";
 
 type PesoFila = PesoConAnimal & { variacionKg: number | null; variacionPorcentaje: number | null };
@@ -44,7 +44,7 @@ export function PesoGeneralTable({ pesos }: { pesos: PesoFila[] }) {
                 {peso.animal?.identificador ?? "—"}
               </TableCell>
               <TableCell>{formatearFecha(peso.fecha)}</TableCell>
-              <TableCell className="font-medium">{peso.peso} kg</TableCell>
+              <TableCell className="font-medium">{formatearPeso(peso.peso)}</TableCell>
               <TableCell>
                 {peso.variacionKg === null ? (
                   <span className="text-muted-foreground">—</span>

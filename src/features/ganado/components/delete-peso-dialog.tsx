@@ -14,7 +14,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import type { PesoRow } from "@/features/ganado/types";
-import { formatearFecha } from "@/features/ganado/utils/animal.utils";
+import { formatearFecha, formatearPeso } from "@/features/ganado/utils/animal.utils";
 import { createClient } from "@/lib/supabase/client";
 import { pesosService } from "@/services/pesos.service";
 
@@ -55,7 +55,7 @@ export function DeletePesoDialog({ peso, open, onOpenChange, onDeleted }: Delete
             {peso && (
               <>
                 Vas a eliminar el registro de{" "}
-                <strong className="text-foreground">{peso.peso} kg</strong> del{" "}
+                <strong className="text-foreground">{formatearPeso(peso.peso)}</strong> del{" "}
                 {formatearFecha(peso.fecha)}. Esta acción no se puede deshacer.
               </>
             )}

@@ -1,5 +1,6 @@
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import type { PesoStats } from "@/features/ganado/types";
+import { formatearPeso } from "@/features/ganado/utils/animal.utils";
 import { formatearVariacion } from "@/features/ganado/utils/peso.utils";
 
 function StatCard({
@@ -40,22 +41,10 @@ export function PesoStatsCards({ stats }: { stats: PesoStats }) {
 
   return (
     <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7">
-      <StatCard
-        label="Peso actual"
-        value={stats.pesoActual !== null ? `${stats.pesoActual} kg` : "—"}
-      />
-      <StatCard
-        label="Peso inicial"
-        value={stats.pesoInicial !== null ? `${stats.pesoInicial} kg` : "—"}
-      />
-      <StatCard
-        label="Mayor peso"
-        value={stats.pesoMaximo !== null ? `${stats.pesoMaximo} kg` : "—"}
-      />
-      <StatCard
-        label="Menor peso"
-        value={stats.pesoMinimo !== null ? `${stats.pesoMinimo} kg` : "—"}
-      />
+      <StatCard label="Peso actual" value={formatearPeso(stats.pesoActual)} />
+      <StatCard label="Peso inicial" value={formatearPeso(stats.pesoInicial)} />
+      <StatCard label="Mayor peso" value={formatearPeso(stats.pesoMaximo)} />
+      <StatCard label="Menor peso" value={formatearPeso(stats.pesoMinimo)} />
       <StatCard
         label="Ganancia total"
         value={formatearVariacion(stats.gananciaTotalKg)}

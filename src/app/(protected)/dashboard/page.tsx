@@ -19,11 +19,11 @@ import { construirDatosGenerales } from "@/features/ganado/utils/reproduccion.ut
 import { InventoryDashboardAlerts } from "@/features/inventario/components/inventory-dashboard-alerts";
 import { calcularInventoryStats, formatearMoneda } from "@/features/inventario/utils/inventario.utils";
 import { FinancialDashboardWidget } from "@/features/finanzas/components/financial-dashboard-widget";
+import { ReportsQuickAccess } from "@/features/reportes/components/reports-quick-access";
 import { calcularRangoPeriodo } from "@/features/finanzas/utils/periodo.utils";
 import { calcularResumenFinanciero, construirUltimasOperaciones } from "@/features/finanzas/utils/finanzas.utils";
 import { SalesDashboardWidget } from "@/features/ventas/components/sales-dashboard-widget";
 import { calcularSalesStats } from "@/features/ventas/utils/venta.utils";
-import { FARM_NAME } from "@/lib/constants/farm";
 import { createClient } from "@/lib/supabase/server";
 import { actividadesService } from "@/services/actividades.service";
 import { animalesService } from "@/services/animales.service";
@@ -145,14 +145,16 @@ export default async function DashboardPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-end">
-        <div>
-          <h1 className="text-2xl font-semibold tracking-tight">
-            Bienvenido, {FARM_NAME}
-          </h1>
-          <p className="text-sm text-muted-foreground">
-            Resumen general de la operación ganadera
-          </p>
+      <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
+        <div className="flex items-center gap-3">
+          {finca.logo_url && (
+            // eslint-disable-next-line @next/next/no-img-element -- logo alojado en Supabase Storage, no un asset estático del sitio.
+            <img src={finca.logo_url} alt={`Logo de ${finca.nombre}`} className="size-12 rounded-lg border object-cover" />
+          )}
+          <div>
+            <h1 className="text-2xl font-semibold tracking-tight">{finca.nombre}</h1>
+            <p className="text-sm text-muted-foreground">Panel de control ganadero</p>
+          </div>
         </div>
         <p className="text-sm text-muted-foreground">{formattedDate}</p>
       </div>
@@ -174,6 +176,7 @@ export default async function DashboardPage() {
         <InventoryDashboardAlerts stats={statsInventario} />
         <SalesDashboardWidget stats={statsVentas} ultimasVentas={ultimasVentas} />
         <FinancialDashboardWidget summary={resumenFinanciero} ultimasOperaciones={ultimasOperaciones} />
+        <ReportsQuickAccess />
       </div>
     </div>
   );

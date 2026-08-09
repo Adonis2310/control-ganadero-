@@ -30,6 +30,6 @@ export const NAV_ITEMS: NavItem[] = [
   { title: "Clientes", href: "/clientes", icon: Users },
   { title: "Proveedores", href: "/proveedores", icon: Truck },
   { title: "Calendario", href: "/calendario", icon: Calendar },
-  { title: "Reportes", href: "/reportes", icon: BarChart3, comingSoon: true },
-  { title: "Configuración", href: "/configuracion", icon: Settings, comingSoon: true },
+  { title: "Reportes", href: "/reportes", icon: BarChart3 },
+  { title: "Configuración", href: "/configuracion", icon: Settings },
 ];

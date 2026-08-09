@@ -18,6 +18,7 @@ import { UpcomingActivities } from "@/features/calendario/components/upcoming-ac
 import { useActividadFilters } from "@/features/calendario/hooks/use-actividad-filters";
 import type { ActividadConAnimal, CalendarEvent } from "@/features/calendario/types";
 import { calcularActividadStats, combinarEventos, construirEventosDesdeActividades } from "@/features/calendario/utils/actividad.utils";
+import { useSystemSettings } from "@/features/configuracion/hooks/use-configuracion";
 import type { AnimalRef } from "@/features/ganado/types";
 
 interface CalendarExplorerProps {
@@ -29,6 +30,7 @@ interface CalendarExplorerProps {
 
 export function CalendarExplorer({ actividadesIniciales, eventosDerivados, animales, fincaId }: CalendarExplorerProps) {
   const router = useRouter();
+  const { primer_dia_semana: primerDiaSemana, horario_inicio: horarioInicio, horario_fin: horarioFin } = useSystemSettings();
   const { filters, setFilters, filtered, hasActiveFilters, clearFilters } = useActividadFilters(actividadesIniciales);
   const [formOpen, setFormOpen] = useState(false);
 
@@ -111,8 +113,11 @@ export function CalendarExplorer({ actividadesIniciales, eventosDerivados, anima
           <TabsTrigger value="historial">Historial</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="calendario" className="pt-4">
-          <CalendarView eventos={eventosFiltrados} />
+        <TabsContent value="calendario" className="flex flex-col gap-2 pt-4">
+          <p className="text-xs text-muted-foreground">
+            Horario laboral: {horarioInicio.slice(0, 5)} – {horarioFin.slice(0, 5)} (solo referencia visual, no limita el registro de actividades)
+          </p>
+          <CalendarView eventos={eventosFiltrados} primerDiaSemana={primerDiaSemana} />
         </TabsContent>
         <TabsContent value="hoy" className="pt-4">
           <TodayActivities eventos={eventosSinFiltrar} />

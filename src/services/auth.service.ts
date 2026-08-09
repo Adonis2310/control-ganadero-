@@ -17,4 +17,17 @@ export const authService = {
     const supabase = createBrowserSupabaseClient();
     return supabase.auth.signOut();
   },
+
+  /** Envía el correo de recuperación; el enlace vuelve a /auth/callback, que intercambia el código y redirige a /restablecer-password. */
+  async resetPasswordForEmail(email: string) {
+    const supabase = createBrowserSupabaseClient();
+    const redirectTo = `${window.location.origin}/auth/callback?next=/restablecer-password`;
+    return supabase.auth.resetPasswordForEmail(email, { redirectTo });
+  },
+
+  /** Requiere una sesión de recuperación ya establecida (ver /auth/callback). */
+  async updatePassword(password: string) {
+    const supabase = createBrowserSupabaseClient();
+    return supabase.auth.updateUser({ password });
+  },
 };

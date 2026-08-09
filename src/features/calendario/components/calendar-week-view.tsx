@@ -3,16 +3,18 @@
 import { ActivityCard } from "@/features/calendario/components/activity-card";
 import type { CalendarEvent } from "@/features/calendario/types";
 import { agruparEventosPorFecha, construirDiasSemana, esHoy, nombreDiaCorto } from "@/features/calendario/utils/actividad.utils";
+import type { PrimerDiaSemana } from "@/features/configuracion/types";
 import { cn } from "@/lib/utils";
 
 interface CalendarWeekViewProps {
   refDate: string;
   eventos: CalendarEvent[];
   onSelectDay: (fecha: string) => void;
+  primerDiaSemana: PrimerDiaSemana;
 }
 
-export function CalendarWeekView({ refDate, eventos, onSelectDay }: CalendarWeekViewProps) {
-  const dias = construirDiasSemana(refDate);
+export function CalendarWeekView({ refDate, eventos, onSelectDay, primerDiaSemana }: CalendarWeekViewProps) {
+  const dias = construirDiasSemana(refDate, primerDiaSemana);
   const eventosPorFecha = agruparEventosPorFecha(eventos);
 
   return (

@@ -1,3 +1,4 @@
+import type { PrimerDiaSemana } from "@/features/configuracion/types";
 import type { DesparasitacionRow, GestacionRow, VacunaRow } from "@/features/ganado/types";
 import {
   TIPO_ACTIVIDAD_OPTIONS,
@@ -237,18 +238,18 @@ function toISODate(date: Date): string {
   return date.toISOString().split("T")[0];
 }
 
-/** Lunes de la semana que contiene `date`. */
-function inicioSemana(date: Date): Date {
+/** Primer día (domingo o lunes, según configuración) de la semana que contiene `date`. */
+function inicioSemana(date: Date, primerDia: PrimerDiaSemana = "lunes"): Date {
   const copia = new Date(date);
-  const diff = (copia.getDay() + 6) % 7; // lunes = 0
+  const diff = primerDia === "domingo" ? copia.getDay() : (copia.getDay() + 6) % 7;
   copia.setDate(copia.getDate() - diff);
   return copia;
 }
 
-/** Grilla de 6 semanas (42 días) que cubre el mes indicado, empezando en lunes. */
-export function construirGridMensual(anio: number, mes: number): CalendarDayCell[] {
-  const primerDia = new Date(anio, mes, 1);
-  const inicioGrid = inicioSemana(primerDia);
+/** Grilla de 6 semanas (42 días) que cubre el mes indicado, respetando el primer día de semana configurado. */
+export function construirGridMensual(anio: number, mes: number, primerDia: PrimerDiaSemana = "lunes"): CalendarDayCell[] {
+  const primerDiaMes = new Date(anio, mes, 1);
+  const inicioGrid = inicioSemana(primerDiaMes, primerDia);
 
   const celdas: CalendarDayCell[] = [];
   for (let i = 0; i < 42; i++) {
@@ -259,9 +260,9 @@ export function construirGridMensual(anio: number, mes: number): CalendarDayCell
   return celdas;
 }
 
-/** Los 7 días (lunes a domingo) de la semana que contiene `fecha`. */
-export function construirDiasSemana(fecha: string): string[] {
-  const inicio = inicioSemana(new Date(`${fecha}T00:00:00`));
+/** Los 7 días de la semana que contiene `fecha`, en el orden que corresponde al primer día configurado. */
+export function construirDiasSemana(fecha: string, primerDia: PrimerDiaSemana = "lunes"): string[] {
+  const inicio = inicioSemana(new Date(`${fecha}T00:00:00`), primerDia);
   return Array.from({ length: 7 }, (_, i) => {
     const dia = new Date(inicio);
     dia.setDate(inicio.getDate() + i);

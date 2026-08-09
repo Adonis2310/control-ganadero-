@@ -3,7 +3,7 @@ import { SidebarNav } from "@/components/layout/sidebar-nav";
 
 export function Sidebar() {
   return (
-    <aside className="fixed inset-y-0 left-0 z-30 hidden w-64 flex-col border-r bg-sidebar text-sidebar-foreground lg:flex">
+    <aside className="fixed inset-y-0 left-0 z-30 hidden w-64 flex-col border-r bg-sidebar text-sidebar-foreground lg:flex print:hidden">
       <div className="h-16 shrink-0 border-b flex items-center">
         <Logo />
       </div>

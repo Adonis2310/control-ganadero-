@@ -27,10 +27,16 @@ interface ProductFormProps {
   mode: "create" | "edit";
   categorias: CategoriaInventario[];
   producto?: ProductoInventario;
+  /** Valor sugerido de stock mínimo (configurado en /configuracion) para productos nuevos. */
+  stockMinimoDefault?: number;
 }
 
-function toFormValues(producto?: ProductoInventario): ProductoFormValues {
-  if (!producto) return EMPTY_PRODUCTO_FORM;
+function toFormValues(producto?: ProductoInventario, stockMinimoDefault?: number): ProductoFormValues {
+  if (!producto) {
+    return stockMinimoDefault !== undefined
+      ? { ...EMPTY_PRODUCTO_FORM, stock_minimo: String(stockMinimoDefault) }
+      : EMPTY_PRODUCTO_FORM;
+  }
   return {
     nombre: producto.nombre,
     categoria_id: producto.categoria_id,
@@ -42,9 +48,9 @@ function toFormValues(producto?: ProductoInventario): ProductoFormValues {
   };
 }
 
-export function ProductForm({ mode, categorias, producto }: ProductFormProps) {
+export function ProductForm({ mode, categorias, producto, stockMinimoDefault }: ProductFormProps) {
   const router = useRouter();
-  const [values, setValues] = useState<ProductoFormValues>(() => toFormValues(producto));
+  const [values, setValues] = useState<ProductoFormValues>(() => toFormValues(producto, stockMinimoDefault));
   const [errors, setErrors] = useState<ProductoFormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 

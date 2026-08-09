@@ -2,7 +2,7 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 import type { Database } from "@/types/database.types";
 
-const PUBLIC_ROUTES = ["/login"];
+const PUBLIC_ROUTES = ["/login", "/recuperar-password", "/restablecer-password", "/auth/callback"];
 
 /**
  * Refresca la sesión de Supabase en cada request y protege las rutas privadas.

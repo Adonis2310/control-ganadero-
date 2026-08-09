@@ -4,6 +4,7 @@ import type { Database } from "@/types/database.types";
 import { FARM_NAME } from "@/lib/constants/farm";
 
 type Finca = Database["public"]["Tables"]["finca"]["Row"];
+type FincaUpdate = Database["public"]["Tables"]["finca"]["Update"];
 
 export const fincaService = {
   /**
@@ -30,5 +31,12 @@ export const fincaService = {
 
     if (insertError) throw insertError;
     return created;
+  },
+
+  /** Actualiza los datos de la finca (información general, contacto, logo) desde /configuracion. */
+  async update(supabase: SupabaseClient<Database>, id: string, payload: FincaUpdate): Promise<Finca> {
+    const { data, error } = await supabase.from("finca").update(payload).eq("id", id).select("*").single();
+    if (error) throw error;
+    return data;
   },
 };

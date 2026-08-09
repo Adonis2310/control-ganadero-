@@ -9,26 +9,30 @@ import {
   esHoy,
   formatearHora,
 } from "@/features/calendario/utils/actividad.utils";
+import type { PrimerDiaSemana } from "@/features/configuracion/types";
 import { cn } from "@/lib/utils";
 
-const NOMBRES_DIAS = ["Lun", "Mar", "Mié", "Jue", "Vie", "Sáb", "Dom"];
+const NOMBRES_DIAS_LUNES = ["Lun", "Mar", "Mié", "Jue", "Vie", "Sáb", "Dom"];
+const NOMBRES_DIAS_DOMINGO = ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"];
 const MAX_VISIBLES = 3;
 
 interface CalendarMonthGridProps {
   refDate: string;
   eventos: CalendarEvent[];
   onSelectDay: (fecha: string) => void;
+  primerDiaSemana: PrimerDiaSemana;
 }
 
-export function CalendarMonthGrid({ refDate, eventos, onSelectDay }: CalendarMonthGridProps) {
+export function CalendarMonthGrid({ refDate, eventos, onSelectDay, primerDiaSemana }: CalendarMonthGridProps) {
   const fechaRef = new Date(`${refDate}T00:00:00`);
-  const celdas = construirGridMensual(fechaRef.getFullYear(), fechaRef.getMonth());
+  const celdas = construirGridMensual(fechaRef.getFullYear(), fechaRef.getMonth(), primerDiaSemana);
   const eventosPorFecha = agruparEventosPorFecha(eventos);
+  const nombresDias = primerDiaSemana === "domingo" ? NOMBRES_DIAS_DOMINGO : NOMBRES_DIAS_LUNES;
 
   return (
     <div className="overflow-hidden rounded-lg border">
       <div className="grid grid-cols-7 border-b bg-muted/40 text-center text-xs font-medium text-muted-foreground">
-        {NOMBRES_DIAS.map((dia) => (
+        {nombresDias.map((dia) => (
           <div key={dia} className="py-2">
             {dia}
           </div>

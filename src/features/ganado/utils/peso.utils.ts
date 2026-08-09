@@ -1,3 +1,4 @@
+import { formatWeightDelta } from "@/features/configuracion/utils/format.utils";
 import type {
   PesoConAnimal,
   PesoConVariacion,
@@ -93,10 +94,9 @@ export function calcularVariacionesPorAnimal<T extends PesoConAnimal>(
   }));
 }
 
+/** Delega en `formatWeightDelta` (sección 17 de la Fase 12): respeta la unidad de peso configurada (kg/lb). */
 export function formatearVariacion(kg: number | null): string {
-  if (kg === null) return "—";
-  const signo = kg > 0 ? "+" : "";
-  return `${signo}${kg.toLocaleString("es", { maximumFractionDigits: 1 })} kg`;
+  return formatWeightDelta(kg);
 }
 
 export function formatearPorcentaje(pct: number | null): string {

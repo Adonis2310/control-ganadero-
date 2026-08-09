@@ -6,12 +6,14 @@ import { CalendarMonthGrid } from "@/features/calendario/components/calendar-mon
 import { CalendarWeekView } from "@/features/calendario/components/calendar-week-view";
 import { useCalendarNavigation } from "@/features/calendario/hooks/use-calendar-navigation";
 import type { CalendarEvent } from "@/features/calendario/types";
+import type { PrimerDiaSemana } from "@/features/configuracion/types";
 
 interface CalendarViewProps {
   eventos: CalendarEvent[];
+  primerDiaSemana: PrimerDiaSemana;
 }
 
-export function CalendarView({ eventos }: CalendarViewProps) {
+export function CalendarView({ eventos, primerDiaSemana }: CalendarViewProps) {
   const { viewMode, setViewMode, refDate, setRefDate, goToday, goPrevious, goNext } = useCalendarNavigation();
 
   function handleSelectDay(fecha: string) {
@@ -28,10 +30,15 @@ export function CalendarView({ eventos }: CalendarViewProps) {
         onPrevious={goPrevious}
         onNext={goNext}
         onToday={goToday}
+        primerDiaSemana={primerDiaSemana}
       />
 
-      {viewMode === "mes" && <CalendarMonthGrid refDate={refDate} eventos={eventos} onSelectDay={handleSelectDay} />}
-      {viewMode === "semana" && <CalendarWeekView refDate={refDate} eventos={eventos} onSelectDay={handleSelectDay} />}
+      {viewMode === "mes" && (
+        <CalendarMonthGrid refDate={refDate} eventos={eventos} onSelectDay={handleSelectDay} primerDiaSemana={primerDiaSemana} />
+      )}
+      {viewMode === "semana" && (
+        <CalendarWeekView refDate={refDate} eventos={eventos} onSelectDay={handleSelectDay} primerDiaSemana={primerDiaSemana} />
+      )}
       {viewMode === "dia" && <CalendarDayView refDate={refDate} eventos={eventos} />}
     </div>
   );
