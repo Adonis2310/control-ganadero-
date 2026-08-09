@@ -143,10 +143,6 @@ export function LoginForm() {
           "Iniciar sesión"
         )}
       </Button>
-
-      <p className="text-center text-sm text-white/70">
-        ¿No tienes cuenta? <span className="font-semibold text-white/90">Regístrate</span>
-      </p>
     </form>
   );
 }
