@@ -8,7 +8,7 @@ export function ResetPasswordContent() {
         <CattleIcon className="size-8 text-[#35421f] dark:text-emerald-300" />
       </div>
 
-      <h2 className="mt-6 text-3xl font-bold tracking-tight text-[#29321c] dark:text-white">
+      <h2 className="mt-6 text-2xl font-bold tracking-tight text-[#29321c] sm:text-3xl dark:text-white">
         Restablecer contraseña
       </h2>
       <p className="mt-2 text-sm text-[#73756d] dark:text-white/60">

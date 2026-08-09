@@ -94,7 +94,7 @@ export function ResetPasswordForm() {
             onChange={(event) => updateField("password", event.target.value)}
             required
             aria-invalid={Boolean(errors.password)}
-            className="h-[50px] rounded-2xl border-transparent bg-[#E8EEF9] px-11 text-[#29321c] placeholder:text-[#73756d]/70 focus-visible:ring-[#35421f]/30 dark:bg-white/5 dark:text-white dark:placeholder:text-white/40"
+            className="h-[50px] rounded-2xl border-transparent bg-[#E8EEF9] px-11 text-[#29321c] placeholder:text-[#5c5e54] focus-visible:ring-[#35421f]/30 dark:bg-white/5 dark:text-white dark:placeholder:text-white/55"
           />
           <button
             type="button"
@@ -123,7 +123,7 @@ export function ResetPasswordForm() {
             onChange={(event) => updateField("confirmPassword", event.target.value)}
             required
             aria-invalid={Boolean(errors.confirmPassword)}
-            className="h-[50px] rounded-2xl border-transparent bg-[#E8EEF9] px-11 text-[#29321c] placeholder:text-[#73756d]/70 focus-visible:ring-[#35421f]/30 dark:bg-white/5 dark:text-white dark:placeholder:text-white/40"
+            className="h-[50px] rounded-2xl border-transparent bg-[#E8EEF9] px-11 text-[#29321c] placeholder:text-[#5c5e54] focus-visible:ring-[#35421f]/30 dark:bg-white/5 dark:text-white dark:placeholder:text-white/55"
           />
         </div>
         {errors.confirmPassword && <p className="text-xs text-red-600 dark:text-red-400">{errors.confirmPassword}</p>}
@@ -153,7 +153,7 @@ export function ResetPasswordForm() {
       <div className="flex justify-center">
         <Link
           href="/login"
-          className="text-xs font-medium text-[#73756d] transition-colors hover:text-[#29321c] dark:text-white/60 dark:hover:text-white"
+          className="text-xs font-medium text-[#565850] transition-colors hover:text-[#29321c] dark:text-white/75 dark:hover:text-white"
         >
           Volver al inicio de sesión
         </Link>

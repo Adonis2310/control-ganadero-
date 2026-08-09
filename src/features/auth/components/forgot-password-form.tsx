@@ -69,7 +69,7 @@ export function ForgotPasswordForm() {
             value={email}
             onChange={(event) => setEmail(event.target.value)}
             required
-            className="h-[50px] rounded-2xl border-transparent bg-[#E8EEF9] pl-11 text-[#29321c] placeholder:text-[#73756d]/70 focus-visible:ring-[#35421f]/30 dark:bg-white/5 dark:text-white dark:placeholder:text-white/40"
+            className="h-[50px] rounded-2xl border-transparent bg-[#E8EEF9] pl-11 text-[#29321c] placeholder:text-[#5c5e54] focus-visible:ring-[#35421f]/30 dark:bg-white/5 dark:text-white dark:placeholder:text-white/55"
           />
         </div>
       </div>
@@ -101,7 +101,7 @@ export function ForgotPasswordForm() {
       <div className="flex justify-center">
         <Link
           href="/login"
-          className="inline-flex items-center gap-1.5 text-xs font-medium text-[#73756d] transition-colors hover:text-[#29321c] dark:text-white/60 dark:hover:text-white"
+          className="inline-flex items-center gap-1.5 text-xs font-medium text-[#565850] transition-colors hover:text-[#29321c] dark:text-white/75 dark:hover:text-white"
         >
           <ArrowLeft className="size-3.5" />
           Volver al inicio de sesión

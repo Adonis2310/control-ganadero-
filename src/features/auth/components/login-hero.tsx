@@ -26,7 +26,7 @@ export function LoginHero() {
         <h1 className="text-4xl leading-[0.95] font-bold tracking-tight text-white drop-shadow-[0_2px_16px_rgba(0,0,0,0.25)] lg:text-[44px] xl:text-[52px]">
           Gestiona tu ganado,
           <br />
-          impulsa <span className="text-[#73d8a4]">tu finca.</span>
+          impulsa <span className="text-[#8ed17a]">tu finca.</span>
         </h1>
         <p className="mt-7 max-w-[400px] text-sm leading-relaxed text-white/90 drop-shadow-[0_1px_8px_rgba(0,0,0,0.25)] xl:max-w-[500px] xl:text-base">
           Control total de tu hato, inventario, salud, producción y más.

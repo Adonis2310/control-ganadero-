@@ -63,7 +63,7 @@ export function LoginForm() {
             value={email}
             onChange={(event) => setEmail(event.target.value)}
             required
-            className="h-[50px] rounded-2xl border-transparent bg-[#E8EEF9] pl-11 text-[#29321c] placeholder:text-[#73756d]/70 focus-visible:ring-[#35421f]/30 dark:bg-white/5 dark:text-white dark:placeholder:text-white/40"
+            className="h-[50px] rounded-2xl border-transparent bg-[#E8EEF9] pl-11 text-[#29321c] placeholder:text-[#5c5e54] focus-visible:ring-[#35421f]/30 dark:bg-white/5 dark:text-white dark:placeholder:text-white/55"
           />
         </div>
       </div>
@@ -82,7 +82,7 @@ export function LoginForm() {
             value={password}
             onChange={(event) => setPassword(event.target.value)}
             required
-            className="h-[50px] rounded-2xl border-transparent bg-[#E8EEF9] px-11 text-[#29321c] placeholder:text-[#73756d]/70 focus-visible:ring-[#35421f]/30 dark:bg-white/5 dark:text-white dark:placeholder:text-white/40"
+            className="h-[50px] rounded-2xl border-transparent bg-[#E8EEF9] px-11 text-[#29321c] placeholder:text-[#5c5e54] focus-visible:ring-[#35421f]/30 dark:bg-white/5 dark:text-white dark:placeholder:text-white/55"
           />
           <button
             type="button"
@@ -104,7 +104,7 @@ export function LoginForm() {
       <div className="flex justify-end">
         <Link
           href="/recuperar-password"
-          className="text-xs font-medium text-[#73756d] transition-colors hover:text-[#29321c] dark:text-white/60 dark:hover:text-white"
+          className="text-xs font-medium text-[#565850] transition-colors hover:text-[#29321c] dark:text-white/75 dark:hover:text-white"
         >
           ¿Olvidaste tu contraseña?
         </Link>

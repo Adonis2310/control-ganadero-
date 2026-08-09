@@ -19,7 +19,10 @@ interface AuthShellProps {
  */
 export function AuthShell({ children }: AuthShellProps) {
   return (
-    <div className="flex min-h-svh items-center justify-center bg-[#f4f1e8] p-3 sm:p-4 dark:bg-[#14150f]">
+    <div
+      className="flex min-h-svh items-center justify-center bg-[#f4f1e8] p-3 sm:p-4 dark:bg-[#14150f]"
+      style={{ paddingBottom: "max(0.75rem, env(safe-area-inset-bottom))" }}
+    >
       {/* Desktop / tablet: composición única, foto + panel orgánico */}
       <div className="relative hidden h-[90vh] min-h-[650px] w-[92vw] max-w-[1450px] overflow-hidden rounded-[40px] shadow-[0_25px_80px_rgba(40,45,20,0.15)] lg:block dark:shadow-[0_25px_80px_rgba(0,0,0,0.4)]">
         <div
@@ -56,7 +59,7 @@ export function AuthShell({ children }: AuthShellProps) {
 
             <h1 className="text-3xl leading-[1.05] font-bold tracking-tight text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.3)]">
               Gestiona tu ganado, impulsa{" "}
-              <span className="text-[#73d8a4]">tu finca.</span>
+              <span className="text-[#8ed17a]">tu finca.</span>
             </h1>
           </div>
         </div>
