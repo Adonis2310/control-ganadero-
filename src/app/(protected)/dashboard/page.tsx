@@ -4,6 +4,15 @@ import { Beef, Boxes, CalendarClock, DollarSign } from "lucide-react";
 import { StatCard } from "@/features/dashboard/components/stat-card";
 import { ChartPlaceholder } from "@/features/dashboard/components/chart-placeholder";
 import type { StatCardData } from "@/features/dashboard/types";
+import { AgendaDashboardWidget } from "@/features/calendario/components/agenda-dashboard-widget";
+import type { ActividadAnimalRef } from "@/features/calendario/types";
+import {
+  calcularActividadStats,
+  combinarEventos,
+  construirEventosDesdeActividades,
+  construirEventosReproduccion,
+  construirEventosSalud,
+} from "@/features/calendario/utils/actividad.utils";
 import { ReproduccionDashboardAlerts } from "@/features/ganado/components/reproduccion-dashboard-alerts";
 import { SaludDashboardAlerts } from "@/features/ganado/components/salud-dashboard-alerts";
 import { construirDatosGenerales } from "@/features/ganado/utils/reproduccion.utils";
@@ -16,14 +25,17 @@ import { SalesDashboardWidget } from "@/features/ventas/components/sales-dashboa
 import { calcularSalesStats } from "@/features/ventas/utils/venta.utils";
 import { FARM_NAME } from "@/lib/constants/farm";
 import { createClient } from "@/lib/supabase/server";
+import { actividadesService } from "@/services/actividades.service";
 import { animalesService } from "@/services/animales.service";
 import { comprasService } from "@/services/compras.service";
+import { desparasitacionesService } from "@/services/desparasitaciones.service";
 import { eventosReproductivosService } from "@/services/eventos-reproductivos.service";
 import { fincaService } from "@/services/finca.service";
 import { gastosService } from "@/services/gastos.service";
 import { gestacionesService } from "@/services/gestaciones.service";
 import { productosInventarioService } from "@/services/productos-inventario.service";
 import { saludService } from "@/services/salud.service";
+import { vacunasService } from "@/services/vacunas.service";
 import { ventasService } from "@/services/ventas.service";
 
 export const metadata: Metadata = {
@@ -45,17 +57,31 @@ export default async function DashboardPage() {
   const animales = await animalesService.listAllConSexo(supabase, finca.id);
   const animalIds = animales.map((a) => a.id);
 
-  const [alertasSalud, gestaciones, eventosReproductivos, productosInventario, ventas, lineasVenta, compras, gastos] =
-    await Promise.all([
-      saludService.getDashboardAlerts(supabase, finca.id),
-      gestacionesService.listForFinca(supabase, animalIds),
-      eventosReproductivosService.listForFinca(supabase, animalIds),
-      productosInventarioService.list(supabase),
-      ventasService.list(supabase),
-      ventasService.listAllLineas(supabase),
-      comprasService.list(supabase),
-      gastosService.list(supabase),
-    ]);
+  const [
+    alertasSalud,
+    gestaciones,
+    eventosReproductivos,
+    productosInventario,
+    ventas,
+    lineasVenta,
+    compras,
+    gastos,
+    actividades,
+    vacunas,
+    desparasitaciones,
+  ] = await Promise.all([
+    saludService.getDashboardAlerts(supabase, finca.id),
+    gestacionesService.listForFinca(supabase, animalIds),
+    eventosReproductivosService.listForFinca(supabase, animalIds),
+    productosInventarioService.list(supabase),
+    ventasService.list(supabase),
+    ventasService.listAllLineas(supabase),
+    comprasService.list(supabase),
+    gastosService.list(supabase),
+    actividadesService.list(supabase, finca.id),
+    vacunasService.listForFinca(supabase, animalIds),
+    desparasitacionesService.listForFinca(supabase, animalIds),
+  ]);
   const { stats: statsReproduccion } = construirDatosGenerales(animales, gestaciones, eventosReproductivos);
   const statsInventario = calcularInventoryStats(productosInventario);
   const statsVentas = calcularSalesStats(ventas, lineasVenta);
@@ -64,6 +90,19 @@ export default async function DashboardPage() {
   const rangoMes = calcularRangoPeriodo("mes");
   const resumenFinanciero = calcularResumenFinanciero(ventas, compras, gastos, rangoMes);
   const ultimasOperaciones = construirUltimasOperaciones(ventas, compras, gastos, 5);
+
+  const animalPorId = new Map<string, ActividadAnimalRef>(
+    animales.map((animal) => [animal.id, { ...animal, raza: null }]),
+  );
+  const statsAgenda = calcularActividadStats(actividades);
+  const eventosAgenda = combinarEventos(
+    construirEventosDesdeActividades(actividades),
+    construirEventosSalud(vacunas, desparasitaciones, animalPorId),
+    construirEventosReproduccion(gestaciones, animalPorId),
+  );
+  const proximaActividad =
+    eventosAgenda.find((evento) => evento.fecha >= new Date().toISOString().split("T")[0] && evento.estado !== "cancelada") ??
+    null;
 
   const STATS: StatCardData[] = [
     {
@@ -92,9 +131,14 @@ export default async function DashboardPage() {
     },
     {
       label: "Eventos próximos",
-      value: "0",
-      change: "Calendario vacío",
-      trend: "neutral",
+      value: String(statsAgenda.pendientes),
+      change:
+        statsAgenda.vencidas > 0
+          ? `${statsAgenda.vencidas} vencida${statsAgenda.vencidas === 1 ? "" : "s"}`
+          : statsAgenda.hoy > 0
+            ? `${statsAgenda.hoy} para hoy`
+            : "Calendario al día",
+      trend: statsAgenda.vencidas > 0 ? "down" : "neutral",
       icon: CalendarClock,
     },
   ];
@@ -124,6 +168,7 @@ export default async function DashboardPage() {
           title="Producción mensual"
           description="Evolución de la producción a lo largo del año"
         />
+        <AgendaDashboardWidget stats={statsAgenda} proxima={proximaActividad} />
         <SaludDashboardAlerts alertas={alertasSalud} />
         <ReproduccionDashboardAlerts stats={statsReproduccion} />
         <InventoryDashboardAlerts stats={statsInventario} />

@@ -1083,6 +1083,111 @@ export interface Database {
           },
         ];
       };
+      actividades: {
+        Row: {
+          id: string;
+          finca_id: string;
+          titulo: string;
+          descripcion: string | null;
+          tipo:
+            | "vacunacion"
+            | "desparasitacion"
+            | "tratamiento"
+            | "consulta_veterinaria"
+            | "pesaje"
+            | "inseminacion"
+            | "revision_reproductiva"
+            | "diagnostico_prenez"
+            | "parto"
+            | "alimentacion"
+            | "mantenimiento"
+            | "compra"
+            | "otro";
+          fecha: string;
+          hora_inicio: string | null;
+          hora_fin: string | null;
+          estado: "pendiente" | "en_progreso" | "completada" | "cancelada";
+          prioridad: "baja" | "media" | "alta";
+          animal_id: string | null;
+          recurrencia: "ninguna" | "diaria" | "semanal" | "mensual";
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          finca_id: string;
+          titulo: string;
+          descripcion?: string | null;
+          tipo:
+            | "vacunacion"
+            | "desparasitacion"
+            | "tratamiento"
+            | "consulta_veterinaria"
+            | "pesaje"
+            | "inseminacion"
+            | "revision_reproductiva"
+            | "diagnostico_prenez"
+            | "parto"
+            | "alimentacion"
+            | "mantenimiento"
+            | "compra"
+            | "otro";
+          fecha: string;
+          hora_inicio?: string | null;
+          hora_fin?: string | null;
+          estado?: "pendiente" | "en_progreso" | "completada" | "cancelada";
+          prioridad?: "baja" | "media" | "alta";
+          animal_id?: string | null;
+          recurrencia?: "ninguna" | "diaria" | "semanal" | "mensual";
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          finca_id?: string;
+          titulo?: string;
+          descripcion?: string | null;
+          tipo?:
+            | "vacunacion"
+            | "desparasitacion"
+            | "tratamiento"
+            | "consulta_veterinaria"
+            | "pesaje"
+            | "inseminacion"
+            | "revision_reproductiva"
+            | "diagnostico_prenez"
+            | "parto"
+            | "alimentacion"
+            | "mantenimiento"
+            | "compra"
+            | "otro";
+          fecha?: string;
+          hora_inicio?: string | null;
+          hora_fin?: string | null;
+          estado?: "pendiente" | "en_progreso" | "completada" | "cancelada";
+          prioridad?: "baja" | "media" | "alta";
+          animal_id?: string | null;
+          recurrencia?: "ninguna" | "diaria" | "semanal" | "mensual";
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "actividades_finca_id_fkey";
+            columns: ["finca_id"];
+            isOneToOne: false;
+            referencedRelation: "finca";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "actividades_animal_id_fkey";
+            columns: ["animal_id"];
+            isOneToOne: false;
+            referencedRelation: "animales";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
     };
     Views: Record<string, never>;
     Functions: {
