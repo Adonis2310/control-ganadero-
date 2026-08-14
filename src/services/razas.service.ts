@@ -13,4 +13,15 @@ export const razasService = {
     if (error) throw error;
     return data ?? [];
   },
+
+  async create(supabase: SupabaseClient<Database>, nombre: string): Promise<Raza> {
+    const { data, error } = await supabase
+      .from("razas")
+      .insert({ nombre })
+      .select("*")
+      .single();
+
+    if (error) throw error;
+    return data;
+  },
 };

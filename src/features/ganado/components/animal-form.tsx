@@ -2,7 +2,7 @@
 
 import { useEffect, useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
-import { Loader2 } from "lucide-react";
+import { Loader2, Plus, X } from "lucide-react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
@@ -39,7 +39,10 @@ import {
 import { createClient } from "@/lib/supabase/client";
 import { animalesService, UNIQUE_VIOLATION_CODE } from "@/services/animales.service";
 import { pesosService } from "@/services/pesos.service";
+import { razasService } from "@/services/razas.service";
 import { animalPhotoStorage } from "@/services/storage.service";
+
+const NUEVA_RAZA_VALUE = "__nueva_raza__";
 
 interface AnimalFormProps {
   mode: "create" | "edit";
@@ -80,6 +83,12 @@ export function AnimalForm({ mode, fincaId, razas, animal }: AnimalFormProps) {
   const [machos, setMachos] = useState<AnimalRef[]>([]);
   const [hembras, setHembras] = useState<AnimalRef[]>([]);
 
+  const [razasLocal, setRazasLocal] = useState<Raza[]>(razas);
+  const [agregandoRaza, setAgregandoRaza] = useState(false);
+  const [nuevaRazaNombre, setNuevaRazaNombre] = useState("");
+  const [creandoRaza, setCreandoRaza] = useState(false);
+  const [errorNuevaRaza, setErrorNuevaRaza] = useState<string | null>(null);
+
   useEffect(() => {
     const supabase = createClient();
     Promise.all([
@@ -113,6 +122,35 @@ export function AnimalForm({ mode, fincaId, razas, animal }: AnimalFormProps) {
     setFotoFile(null);
     setFotoPreviewUrl(null);
     setRemoverFotoExistente(true);
+  }
+
+  async function handleCrearRaza() {
+    const nombre = nuevaRazaNombre.trim();
+    if (!nombre) {
+      setErrorNuevaRaza("Escribe un nombre para la raza.");
+      return;
+    }
+
+    setCreandoRaza(true);
+    setErrorNuevaRaza(null);
+    try {
+      const supabase = createClient();
+      const nueva = await razasService.create(supabase, nombre);
+      setRazasLocal((prev) => [...prev, nueva].sort((a, b) => a.nombre.localeCompare(b.nombre)));
+      updateField("raza_id", nueva.id);
+      setAgregandoRaza(false);
+      setNuevaRazaNombre("");
+      toast.success("Raza agregada", { description: `${nueva.nombre} ya está disponible para seleccionar.` });
+    } catch (error) {
+      const code = (error as { code?: string } | null)?.code;
+      if (code === UNIQUE_VIOLATION_CODE) {
+        setErrorNuevaRaza("Ya existe una raza con ese nombre.");
+      } else {
+        setErrorNuevaRaza("No se pudo agregar la raza. Intenta nuevamente.");
+      }
+    } finally {
+      setCreandoRaza(false);
+    }
   }
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -290,36 +328,89 @@ export function AnimalForm({ mode, fincaId, razas, animal }: AnimalFormProps) {
 
           <div className="space-y-2">
             <Label>Raza *</Label>
-            <Select
-              value={values.raza_id}
-              onValueChange={(value) => updateField("raza_id", value ?? "")}
-              disabled={isSubmitting || razas.length === 0}
-            >
-              <SelectTrigger className="w-full" aria-invalid={Boolean(errors.raza_id)}>
-                <SelectValue
-                  placeholder={
-                    razas.length === 0 ? "No hay razas registradas" : "Selecciona una raza"
+            {agregandoRaza ? (
+              <div className="space-y-1.5">
+                <div className="flex gap-2">
+                  <Input
+                    autoFocus
+                    value={nuevaRazaNombre}
+                    onChange={(event) => {
+                      setNuevaRazaNombre(event.target.value);
+                      setErrorNuevaRaza(null);
+                    }}
+                    placeholder="Nombre de la nueva raza"
+                    disabled={creandoRaza}
+                    aria-invalid={Boolean(errorNuevaRaza)}
+                    onKeyDown={(event) => {
+                      if (event.key === "Enter") {
+                        event.preventDefault();
+                        handleCrearRaza();
+                      }
+                    }}
+                  />
+                  <Button
+                    type="button"
+                    size="icon"
+                    onClick={handleCrearRaza}
+                    disabled={creandoRaza}
+                    aria-label="Guardar raza"
+                  >
+                    {creandoRaza ? <Loader2 className="size-4 animate-spin" /> : <Plus className="size-4" />}
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="icon"
+                    onClick={() => {
+                      setAgregandoRaza(false);
+                      setNuevaRazaNombre("");
+                      setErrorNuevaRaza(null);
+                    }}
+                    disabled={creandoRaza}
+                    aria-label="Cancelar"
+                  >
+                    <X className="size-4" />
+                  </Button>
+                </div>
+                {errorNuevaRaza && <p className="text-xs text-destructive">{errorNuevaRaza}</p>}
+              </div>
+            ) : (
+              <Select
+                value={values.raza_id}
+                onValueChange={(value) => {
+                  if (value === NUEVA_RAZA_VALUE) {
+                    setAgregandoRaza(true);
+                    return;
                   }
-                >
-                  {(current: string | null) =>
-                    razas.find((raza) => raza.id === current)?.nombre ?? "Selecciona una raza"
-                  }
-                </SelectValue>
-              </SelectTrigger>
-              <SelectContent>
-                {razas.map((raza) => (
-                  <SelectItem key={raza.id} value={raza.id}>
-                    {raza.nombre}
+                  updateField("raza_id", value ?? "");
+                }}
+                disabled={isSubmitting}
+              >
+                <SelectTrigger className="w-full" aria-invalid={Boolean(errors.raza_id)}>
+                  <SelectValue
+                    placeholder={
+                      razasLocal.length === 0 ? "No hay razas registradas" : "Selecciona una raza"
+                    }
+                  >
+                    {(current: string | null) =>
+                      razasLocal.find((raza) => raza.id === current)?.nombre ?? "Selecciona una raza"
+                    }
+                  </SelectValue>
+                </SelectTrigger>
+                <SelectContent>
+                  {razasLocal.map((raza) => (
+                    <SelectItem key={raza.id} value={raza.id}>
+                      {raza.nombre}
+                    </SelectItem>
+                  ))}
+                  <SelectItem value={NUEVA_RAZA_VALUE}>
+                    <Plus className="size-4" />
+                    Agregar raza
                   </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            {errors.raza_id && <p className="text-xs text-destructive">{errors.raza_id}</p>}
-            {razas.length === 0 && (
-              <p className="text-xs text-muted-foreground">
-                Todavía no hay razas registradas en el sistema.
-              </p>
+                </SelectContent>
+              </Select>
             )}
+            {errors.raza_id && <p className="text-xs text-destructive">{errors.raza_id}</p>}
           </div>
 
           <div className="space-y-2">
