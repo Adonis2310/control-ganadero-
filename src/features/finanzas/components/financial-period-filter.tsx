@@ -18,7 +18,7 @@ export function FinancialPeriodFilter({
   onPersonalizadoChange,
 }: FinancialPeriodFilterProps) {
   return (
-    <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-end">
+    <div className="flex flex-col gap-3 rounded-xl bg-card p-4 ring-1 ring-foreground/10 backdrop-blur-xl shadow-[0_4px_24px_rgba(0,0,0,0.06)] dark:shadow-[0_4px_24px_rgba(0,0,0,0.35)] sm:flex-row sm:flex-wrap sm:items-end">
       <div className="space-y-1.5">
         <label className="text-xs font-medium text-muted-foreground">Período</label>
         <Select
