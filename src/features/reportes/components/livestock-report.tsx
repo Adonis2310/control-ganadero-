@@ -49,7 +49,7 @@ export function LivestockReport({ animales, rango, periodoLabel }: { animales: A
           <p className="text-sm text-muted-foreground">Composición y movimientos del hato.</p>
         </div>
         <div className="flex items-center gap-2 print:hidden">
-          <Button variant="ghost" size="sm" nativeButton={false} render={<Link href="/ganado" />}>
+          <Button variant="outline" size="sm" nativeButton={false} render={<Link href="/ganado" />}>
             Ir a Ganado
           </Button>
           <ReportExport

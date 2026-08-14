@@ -13,7 +13,7 @@ interface ReportTableProps<T> {
 export function ReportTable<T>({ columns, rows, keyField, emptyMessage = "No hay datos para este período." }: ReportTableProps<T>) {
   if (rows.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center gap-2 rounded-lg border border-dashed py-10 text-center">
+      <div className="flex flex-col items-center justify-center gap-2 rounded-lg border border-dashed bg-white py-10 text-center dark:bg-neutral-900">
         <Inbox className="size-5 text-muted-foreground" />
         <p className="text-sm text-muted-foreground">{emptyMessage}</p>
       </div>
@@ -21,7 +21,7 @@ export function ReportTable<T>({ columns, rows, keyField, emptyMessage = "No hay
   }
 
   return (
-    <div className="overflow-hidden rounded-lg border">
+    <div className="overflow-hidden rounded-lg border bg-white dark:bg-neutral-900">
       <Table>
         <TableHeader>
           <TableRow>

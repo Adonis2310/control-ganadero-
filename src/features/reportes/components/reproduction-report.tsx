@@ -62,7 +62,7 @@ export function ReproductionReport({ animales, gestaciones, eventos, rango, peri
           <p className="text-sm text-muted-foreground">Actividad reproductiva del hato en el período.</p>
         </div>
         <div className="flex items-center gap-2 print:hidden">
-          <Button variant="ghost" size="sm" nativeButton={false} render={<Link href="/reproduccion" />}>
+          <Button variant="outline" size="sm" nativeButton={false} render={<Link href="/reproduccion" />}>
             Ir a Reproducción
           </Button>
           <ReportExport

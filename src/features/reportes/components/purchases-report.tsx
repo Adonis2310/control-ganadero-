@@ -52,7 +52,7 @@ export function PurchasesReport({ compras, serieMensual, rango, periodoLabel }: 
           <p className="text-sm text-muted-foreground">Compras realizadas a proveedores en el período.</p>
         </div>
         <div className="flex items-center gap-2 print:hidden">
-          <Button variant="ghost" size="sm" nativeButton={false} render={<Link href="/compras" />}>
+          <Button variant="outline" size="sm" nativeButton={false} render={<Link href="/compras" />}>
             Ir a Compras
           </Button>
           <ReportExport

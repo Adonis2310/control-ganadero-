@@ -57,7 +57,7 @@ export function HealthReport({ registros, actividades, rango, periodoLabel }: He
           <p className="text-sm text-muted-foreground">Eventos sanitarios registrados en el período.</p>
         </div>
         <div className="flex items-center gap-2 print:hidden">
-          <Button variant="ghost" size="sm" nativeButton={false} render={<Link href="/salud" />}>
+          <Button variant="outline" size="sm" nativeButton={false} render={<Link href="/salud" />}>
             Ir a Salud
           </Button>
           <ReportExport

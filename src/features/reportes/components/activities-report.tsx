@@ -55,7 +55,7 @@ export function ActivitiesReport({ actividades, rango, periodoLabel }: Activitie
           <p className="text-sm text-muted-foreground">Actividades del calendario ganadero en el período.</p>
         </div>
         <div className="flex items-center gap-2 print:hidden">
-          <Button variant="ghost" size="sm" nativeButton={false} render={<Link href="/calendario" />}>
+          <Button variant="outline" size="sm" nativeButton={false} render={<Link href="/calendario" />}>
             Ir a Calendario
           </Button>
           <ReportExport

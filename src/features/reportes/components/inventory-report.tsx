@@ -50,7 +50,7 @@ export function InventoryReport({ productos, movimientos, meses, rango, periodoL
           <p className="text-sm text-muted-foreground">Stock actual y movimientos del período.</p>
         </div>
         <div className="flex items-center gap-2 print:hidden">
-          <Button variant="ghost" size="sm" nativeButton={false} render={<Link href="/inventario" />}>
+          <Button variant="outline" size="sm" nativeButton={false} render={<Link href="/inventario" />}>
             Ir a Inventario
           </Button>
           <ReportExport

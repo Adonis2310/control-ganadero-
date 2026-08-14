@@ -71,7 +71,7 @@ export function WeightReport({ pesos, animales, rango, periodoLabel }: WeightRep
           <p className="text-sm text-muted-foreground">Evolución del peso del hato y de cada animal.</p>
         </div>
         <div className="flex items-center gap-2 print:hidden">
-          <Button variant="ghost" size="sm" nativeButton={false} render={<Link href="/ganado/peso" />}>
+          <Button variant="outline" size="sm" nativeButton={false} render={<Link href="/ganado/peso" />}>
             Ir a Control de Peso
           </Button>
           <ReportExport

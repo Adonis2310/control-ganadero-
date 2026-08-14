@@ -32,7 +32,7 @@ export function FinancialReport({ summary, serieMensual, periodoLabel }: Financi
           <p className="text-sm text-muted-foreground">Ingresos, egresos y resultado operativo del período.</p>
         </div>
         <div className="flex items-center gap-2 print:hidden">
-          <Button variant="ghost" size="sm" nativeButton={false} render={<Link href="/finanzas" />}>
+          <Button variant="outline" size="sm" nativeButton={false} render={<Link href="/finanzas" />}>
             Ir a Finanzas
           </Button>
           <ReportExport
