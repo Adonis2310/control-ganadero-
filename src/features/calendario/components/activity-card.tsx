@@ -20,8 +20,8 @@ export function ActivityCard({ evento, mostrarFecha }: ActivityCardProps) {
     <Link
       href={evento.href ?? "#"}
       className={cn(
-        "flex flex-col gap-2 rounded-lg border p-3 text-sm transition-colors hover:bg-muted/50 sm:flex-row sm:items-center sm:justify-between",
-        evento.readonly && "border-dashed",
+        "flex flex-col gap-2 rounded-lg bg-card p-3 text-sm ring-1 ring-foreground/10 backdrop-blur-xl transition-colors hover:bg-muted/50 sm:flex-row sm:items-center sm:justify-between",
+        evento.readonly && "border border-dashed",
       )}
     >
       <div className="flex min-w-0 flex-col gap-1">

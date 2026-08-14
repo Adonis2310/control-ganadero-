@@ -12,7 +12,7 @@ interface ActivityListProps {
 export function ActivityList({ eventos, emptyMessage, mostrarFecha }: ActivityListProps) {
   if (eventos.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center gap-2 rounded-lg border border-dashed py-10 text-center">
+      <div className="flex flex-col items-center justify-center gap-2 rounded-lg border border-dashed bg-card py-10 text-center backdrop-blur-xl">
         <CalendarX className="size-5 text-muted-foreground" />
         <p className="text-sm text-muted-foreground">{emptyMessage}</p>
       </div>

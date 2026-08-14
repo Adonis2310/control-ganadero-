@@ -24,7 +24,7 @@ export function CalendarWeekView({ refDate, eventos, onSelectDay, primerDiaSeman
         const numeroDia = Number(fecha.split("-")[2]);
 
         return (
-          <div key={fecha} className="rounded-lg border">
+          <div key={fecha} className="overflow-hidden rounded-xl bg-card ring-1 ring-foreground/10 backdrop-blur-xl shadow-[0_4px_24px_rgba(0,0,0,0.06)] dark:shadow-[0_4px_24px_rgba(0,0,0,0.35)]">
             <button
               type="button"
               onClick={() => onSelectDay(fecha)}

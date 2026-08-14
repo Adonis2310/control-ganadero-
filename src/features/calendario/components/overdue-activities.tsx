@@ -25,7 +25,7 @@ export function OverdueActivities({ eventos, actividadesPorId, onChanged }: Over
 
   if (vencidas.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center gap-2 rounded-lg border border-dashed py-10 text-center">
+      <div className="flex flex-col items-center justify-center gap-2 rounded-lg border border-dashed bg-card py-10 text-center backdrop-blur-xl">
         <CalendarCheck2 className="size-5 text-muted-foreground" />
         <p className="text-sm text-muted-foreground">No hay actividades vencidas.</p>
       </div>
@@ -38,7 +38,7 @@ export function OverdueActivities({ eventos, actividadesPorId, onChanged }: Over
         const actividad = evento.actividadId ? actividadesPorId.get(evento.actividadId) : undefined;
 
         return (
-          <div key={evento.id} className="flex flex-col gap-2 rounded-lg border border-red-200 p-3 text-sm dark:border-red-500/30 sm:flex-row sm:items-center sm:justify-between">
+          <div key={evento.id} className="flex flex-col gap-2 rounded-lg border border-red-200 bg-card p-3 text-sm backdrop-blur-xl dark:border-red-500/30 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex min-w-0 flex-col gap-1">
               <div className="flex flex-wrap items-center gap-2">
                 <span className="text-xs font-medium text-red-700 dark:text-red-400">

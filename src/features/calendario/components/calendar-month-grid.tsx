@@ -30,7 +30,7 @@ export function CalendarMonthGrid({ refDate, eventos, onSelectDay, primerDiaSema
   const nombresDias = primerDiaSemana === "domingo" ? NOMBRES_DIAS_DOMINGO : NOMBRES_DIAS_LUNES;
 
   return (
-    <div className="overflow-hidden rounded-lg border">
+    <div className="overflow-hidden rounded-xl bg-card ring-1 ring-foreground/10 backdrop-blur-xl shadow-[0_4px_24px_rgba(0,0,0,0.06)] dark:shadow-[0_4px_24px_rgba(0,0,0,0.35)]">
       <div className="grid grid-cols-7 border-b bg-muted/40 text-center text-xs font-medium text-muted-foreground">
         {nombresDias.map((dia) => (
           <div key={dia} className="py-2">
