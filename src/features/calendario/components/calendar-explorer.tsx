@@ -114,7 +114,7 @@ export function CalendarExplorer({ actividadesIniciales, eventosDerivados, anima
         </TabsList>
 
         <TabsContent value="calendario" className="flex flex-col gap-2 pt-4">
-          <p className="text-xs text-muted-foreground">
+          <p className="w-fit rounded-md bg-muted px-3 py-1.5 text-xs text-muted-foreground">
             Horario laboral: {horarioInicio.slice(0, 5)} – {horarioFin.slice(0, 5)} (solo referencia visual, no limita el registro de actividades)
           </p>
           <CalendarView eventos={eventosFiltrados} primerDiaSemana={primerDiaSemana} />
